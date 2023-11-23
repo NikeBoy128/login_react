@@ -2,6 +2,7 @@ import React, { useRef, useState, useContext } from 'react';
 import {Card, Form, Button, Alert} from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
 
 
 export default function Signin() {
@@ -16,17 +17,27 @@ export default function Signin() {
 
   
   async function submitHandler(e) {
-    e.preventDefault()
-    setWaiting(true)
+    e.preventDefault();
+    setWaiting(true);
   
     try {
-      signin(emailRef.current.value, passwordRef.current.value)
-      navigate('/')
-    } catch (err){
-      setError(verbose ? err.message : 'Failed created the account')
-      
-    } 
-    setWaiting(false)
+      const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/api/token/', {
+        username: emailRef.current.value,
+        password: passwordRef.current.value,
+      });
+  
+      if (response.data.access) {
+        // Guarda el token en el local storage o en el contexto
+        localStorage.setItem('token', response.data.access);
+        navigate('/dashboard');
+      } else {
+        setError('Failed to sign in');
+      }
+    } catch (err) {
+      setError(verbose ? err.message : 'Failed to sign in');
+    }
+  
+    setWaiting(false);
   }
 
   return (
@@ -37,8 +48,8 @@ export default function Signin() {
   {error && <Alert variant='danger'>{error}</Alert>}
   <Form onSubmit={submitHandler}>
     <Form.Group id='email'>
-      <Form.Label>Email</Form.Label>
-      <Form.Control type='email' ref={emailRef} required></Form.Control>
+      <Form.Label>Usuario</Form.Label>
+      <Form.Control type='text' ref={emailRef} required></Form.Control>
     </Form.Group>
     <Form.Group id='password'>
       <Form.Label>Password</Form.Label>
