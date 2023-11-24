@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom'
 import {Card, Button, Alert} from 'react-bootstrap'
 import { useAuth } from '../contexts/AuthContext';
+import Sidebar from './sidebar';
 
 export default function Dashboard() {
   
@@ -42,19 +43,24 @@ export default function Dashboard() {
   }
 
   return (
-    <>
-      <h2 className='text-center mb-2'>Dashboard</h2>
-      {error && <Alert variant='danger'>{error}</Alert>}
-
-      <Card>
-        <Card.Body>
-          <h3 className='text-center mb-2'>Welcome back : {user ? user.username : 'Loading...'}</h3>
-          <h3 className='text-center mb-2'>Email : {user ? user.email : 'Loading...'}</h3>
-        </Card.Body>
-      </Card>
-      <div className='w-100 text-center mt-2'>
-        <Button variant='link' disabled={waiting} onClick={handleLogout}>Log out</Button>
+    <div className="dashboard">
+      <div className="dashboard-content">
+        <Sidebar/>
+        {/* 
+        <h2 className='text-center mb-2'>Dashboard</h2>
+        {error && <Alert variant='danger'>{error}</Alert>}
+        <Card>
+          <Card.Body>
+            <h3 className='text-center mb-2'>Welcome back : {user ? user.username : 'Loading...'}</h3>
+            <h3 className='text-center mb-2'>Email : {user ? user.email : 'Loading...'}</h3>
+            <h3 className='text-center mb-2'>Roles : {user ? user.roles : 'Loading...'}</h3>
+          </Card.Body>
+        </Card>
+        <div className='w-100 text-center mt-2'>
+          <Button variant='link' disabled={waiting} onClick={handleLogout}>Log out</Button>
+        </div>
+        */}
       </div>
-    </>
-  )
+    </div>
+  );
 }
