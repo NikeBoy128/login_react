@@ -7,13 +7,14 @@ import {
   CDBSidebarMenu,
   CDBSidebarMenuItem,
 } from 'cdbreact';
-import { NavLink } from 'react-router-dom';
+import { NavLink,useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 const Sidebar = () => {
   const [user, setUser] = useState(null);
 const [error, setError] = useState('');
 const [waiting, setWaiting] = useState(false);
+const navigate = useNavigate();
 useEffect(() => {
   const fetchUserData = async () => {
     try {
@@ -30,6 +31,10 @@ useEffect(() => {
 
   fetchUserData();
 }, []);
+const handleLogout = () => {
+  localStorage.removeItem('token');
+  navigate('/signin');
+};
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'scroll initial' }}>
       <CDBSidebar textColor="#fff" backgroundColor="#333">
@@ -59,8 +64,11 @@ useEffect(() => {
               padding: '20px 5px',
             }}
           >
-            JJplus services
+            JJplus services 
+            <br/>
+          <CDBSidebarMenuItem icon="sign-out" onClick={handleLogout}>Logout</CDBSidebarMenuItem>
           </div>
+          
         </CDBSidebarFooter>
       </CDBSidebar>
     </div>
