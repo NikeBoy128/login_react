@@ -13,6 +13,7 @@ import React, { useState, useEffect } from 'react';
 const Sidebar = () => {
   const [user, setUser] = useState(null);
 const [error, setError] = useState('');
+const [waiting, setWaiting] = useState(false);
 useEffect(() => {
   const fetchUserData = async () => {
     try {

@@ -46,7 +46,7 @@ export default function Dashboard() {
     <div className="dashboard">
       <div className="dashboard-content">
         <Sidebar/>
-        
+        {/* 
         <h2 className='text-center mb-2'>Dashboard</h2>
         {error && <Alert variant='danger'>{error}</Alert>}
         <Card>
@@ -59,7 +59,7 @@ export default function Dashboard() {
         <div className='w-100 text-center mt-2'>
           <Button variant='link' disabled={waiting} onClick={handleLogout}>Log out</Button>
         </div>
-        
+        */}
       </div>
     </div>
   );
