@@ -52,7 +52,7 @@ const handleLogout = () => {
             <NavLink exact to="/tables" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="car">Autos</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink exact to="/profile" activeClassName="activeClicked">
+            <NavLink exact to="/Prueba" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="plane">Viajes</CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
