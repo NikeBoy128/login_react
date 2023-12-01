@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -8,16 +9,30 @@
 
 /* Add this rule to style your Sidebar */
 .sidebar {
-  background-color: #72e9a8 !important; /* This sets the background color to green */
-  padding: 0 !important; /* This removes any default padding */
-  margin: 0 !important; /* This removes any default margin */
-  min-height: 100vh; /* This ensures the sidebar takes up the full height of the view */
+  background-color: #72e9a8 !important;
+  /* This sets the background color to green */
+  padding: 0 !important;
+  /* This removes any default padding */
+  margin: 0 !important;
+  /* This removes any default margin */
+  min-height: 100vh;
+  /* This ensures the sidebar takes up the full height of the view */
+}
+
+.dashboard-content {
+  height: '100%'; 
+  display: 'flex';
+  flex-direction: 'column';
+  justify-content: 'center'
+
 }
 
 a:hover {
-  color: #0000ff; /* #0ab4ff */
+  color: #0000ff;
+  /* #0ab4ff */
   font-size: 1.1rem;
 }
+
 .menu-anchor:hover {
   background-color: #cafce1 !important;
   font-weight: bolder;
@@ -30,11 +45,13 @@ a:hover {
 button {
   right: 20px;
 }
+
 hr {
   margin-top: 0px;
   margin-bottom: 0px;
   opacity: 0.15;
 }
+
 a,
 .fpTHfu {
   background-color: #72e9a8 !important;
