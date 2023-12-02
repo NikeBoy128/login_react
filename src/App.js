@@ -5,7 +5,7 @@ import Signup from './components/Signup';
 import Signin from './components/Signin';
 import Dashboard from './components/Dashboard';
 import Autos from './components/Autos';
-import Usuarios from './components/Usuarios'
+import Usuarios from './components/Usuarios';
 import Viajes from './components/Viajes'
 import Gastos from './components/Gastos'
 import Grupos from './components/Grupos'

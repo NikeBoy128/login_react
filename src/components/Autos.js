@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Card, Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import Sidebar from './sidebar';
 import 'bootstrap/dist/css/bootstrap.css';
+import { PencilSquare, Trash, Save, X } from 'react-bootstrap-icons';
 import DataTable from 'react-data-table-component';
 
 export default function Autos() {
@@ -25,10 +26,10 @@ export default function Autos() {
       cell: (row) => (
         <div>
           <Button variant="warning" onClick={() => handleModal('edit', row)}>
-            Editar
-          </Button>
+            <PencilSquare /> 
+          </Button>&nbsp;
           <Button variant="danger" onClick={() => handleDelete(row.id)}>
-            Eliminar
+            <Trash /> 
           </Button>
         </div>
       ),
