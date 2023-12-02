@@ -53,13 +53,13 @@ const handleLogout = () => {
               <CDBSidebarMenuItem icon="car">Autos</CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/Gastos" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="plane">Gastos</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="usd">Gastos</CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/Viajes" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="plane">Viajes</CDBSidebarMenuItem>
             </NavLink>
             <NavLink exact to="/Grupos" activeClassName="activeClicked">
-              <CDBSidebarMenuItem icon="plane">Grupos</CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="user-circle">Grupos</CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
         </CDBSidebarContent>
