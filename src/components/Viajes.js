@@ -98,9 +98,9 @@ export default function Autos() {
                           {editedData.id === item.id ? (
                             <Button variant="success" onClick={handleUpdate}>Guardar</Button>
                           ) : (
-                            <Button variant="warning" onClick={() => handleEdit(item)}>Editar</Button>
+                            <Button variant="warning" onClick={() => handleEdit(item)}></Button>
                           )}
-                          <Button variant="danger" onClick={() => handleDelete(item.id)}>Eliminar</Button>
+                          <Button variant="danger" onClick={() => handleDelete(item.id)}></Button>
                         </td>
                       </tr>
                     ))}
