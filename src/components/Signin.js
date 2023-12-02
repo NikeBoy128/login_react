@@ -15,7 +15,6 @@ export default function Signin() {
   const {signin} = useAuth();
   const navigate = useNavigate();
   const verbose = true;
-  const [refreshToken, setRefreshToken] = useState(null);
 
   
   async function submitHandler(e) {
@@ -29,6 +28,7 @@ export default function Signin() {
       });
   
       if (response.data.access) {
+        // Guarda el token en el local storage o en el contexto
         localStorage.setItem('token', response.data.access);
         navigate('/dashboard');
       } else {

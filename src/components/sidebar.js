@@ -46,14 +46,20 @@ const handleLogout = () => {
 
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
-            <NavLink exact to="/" activeClassName="activeClicked">
+            <NavLink exact to="/Usuarios" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="user">Usuarios</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink exact to="/tables" activeClassName="activeClicked">
+            <NavLink exact to="/Autos" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="car">Autos</CDBSidebarMenuItem>
             </NavLink>
-            <NavLink exact to="/Prueba" activeClassName="activeClicked">
+            <NavLink exact to="/Gastos" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="plane">Gastos</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink exact to="/Viajes" activeClassName="activeClicked">
               <CDBSidebarMenuItem icon="plane">Viajes</CDBSidebarMenuItem>
+            </NavLink>
+            <NavLink exact to="/Grupos" activeClassName="activeClicked">
+              <CDBSidebarMenuItem icon="plane">Grupos</CDBSidebarMenuItem>
             </NavLink>
           </CDBSidebarMenu>
         </CDBSidebarContent>

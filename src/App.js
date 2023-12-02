@@ -1,30 +1,36 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import AuthProvider from './contexts/AuthContext';
-import AuthWrapper from './AuthWrapper';
 import Signup from './components/Signup';
 import Signin from './components/Signin';
 import Dashboard from './components/Dashboard';
-import Prueba from './components/Prueba';
-import CrearAuto from './components/CrearAuto';
+import Autos from './components/Autos';
+import Usuarios from './components/Usuarios'
+import Viajes from './components/Viajes'
+import Gastos from './components/Gastos'
+import Grupos from './components/Grupos'
+import CrearUsuario from './components/CrearUsuario';
 import PrivateRoute from './PrivateRoute';
-import PrivateRouteDashboard from './components/PrivateRouteDashboard';
+import PrivateRouteDashboard from './components/PrivateRouteDashboard'
 
 function App() {
   return (
     <Router>
-      <AuthWrapper> 
-        <AuthProvider>
-          <Routes>
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/signin" element={<Signin />} />
-            <Route path="/Prueba" element={<PrivateRoute><Prueba /></PrivateRoute>} />
-            <Route path="/CrearAuto" element={<PrivateRoute><CrearAuto /></PrivateRoute>} />
-            <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="/" element={<PrivateRouteDashboard />} />
-          </Routes>
-        </AuthProvider>
-      </AuthWrapper>
+      <AuthProvider>
+        <Routes>
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/Autos" element={<PrivateRoute><Autos /></PrivateRoute>}/>
+          <Route path="/Usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>}/>
+          <Route path="/Viajes" element={<PrivateRoute><Viajes /></PrivateRoute>}/>
+          <Route path="/Gastos" element={<PrivateRoute><Gastos /></PrivateRoute>}/>
+          <Route path="/Grupos" element={<PrivateRoute><Grupos /></PrivateRoute>}/>
+          <Route path="/CrearUsuario" element={<PrivateRoute><CrearUsuario /></PrivateRoute>} />
+          <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+          
+          <Route path="/" element={<PrivateRouteDashboard />} />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 }
