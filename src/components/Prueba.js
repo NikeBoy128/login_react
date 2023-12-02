@@ -1,16 +1,16 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Card, Container, Row, Col, Button, Form } from "react-bootstrap";
 import Sidebar from "./sidebar";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.css";
 import DataTable from "react-data-table-component";
-import { Modal } from 'react-bootstrap';
+import { Modal } from "react-bootstrap";
 export default function Prueba() {
   const [data, setData] = useState([]);
   const [editedData, setEditedData] = useState({});
   const [error, setError] = useState("");
-  const [filterText, setFilterText] = useState('');
+  const [filterText, setFilterText] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const filterTimeout = useRef(null);
   const [showModal, setShowModal] = useState(false);
@@ -18,16 +18,20 @@ export default function Prueba() {
   const [newData, setNewData] = useState({});
 
   const columns = [
-    { name: 'Id', selector: 'id' },
-    { name: 'Marca', selector: 'marca' },
-    { name: 'Cantidad Pasajeros', selector: 'cantidad_pasajeros' },
-    { name: 'Placa', selector: 'placa' },
+    { name: "Id", selector: "id" },
+    { name: "Marca", selector: "marca" },
+    { name: "Cantidad Pasajeros", selector: "cantidad_pasajeros" },
+    { name: "Placa", selector: "placa" },
     {
-      name: 'Acciones',
-      cell: row => (
+      name: "Acciones",
+      cell: (row) => (
         <div>
-          <Button variant="warning" onClick={() => handleEdit(row)}>Editar</Button>
-          <Button variant="danger" onClick={() => handleDelete(row.id)}>Eliminar</Button>
+          <Button variant="warning" onClick={() => handleEdit(row)}>
+            Editar
+          </Button>
+          <Button variant="danger" onClick={() => handleDelete(row.id)}>
+            Eliminar
+          </Button>
         </div>
       ),
     },
@@ -35,7 +39,12 @@ export default function Prueba() {
   const SubHeaderComponent = () => {
     return (
       <div>
-        Buscar: <input type='text' value={filterText} onChange={e => setFilterText(e.target.value)} />
+        Buscar:{" "}
+        <input
+          type="text"
+          value={filterText}
+          onChange={(e) => setFilterText(e.target.value)}
+        />
       </div>
     );
   };
@@ -54,7 +63,9 @@ export default function Prueba() {
     fetchData();
   }, []);
   useEffect(() => {
-    const filtered = data.filter(item => item.marca.toLowerCase().includes(filterText.toLowerCase()));
+    const filtered = data.filter((item) =>
+      item.marca.toLowerCase().includes(filterText.toLowerCase())
+    );
     setFilteredItems(filtered);
   }, [data, filterText]);
 
@@ -101,17 +112,17 @@ export default function Prueba() {
         newData
       );
       setData([...data, response.data]);
+      setNewData({});
       setShowCreateModal(false);
     } catch (err) {
       setError("Failed to create item");
     }
   };
-  
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div style={{ height: "100vh" }}>
       <Container fluid>
-        <Row style={{ height: '100%' }}>
+        <Row style={{ height: "100%" }}>
           <Col sm={3}>
             <Sidebar />
           </Col>
@@ -122,13 +133,14 @@ export default function Prueba() {
                   title="Autos"
                   columns={columns}
                   data={filteredItems}
-                  pagination 
+                  pagination
                   subHeader
                   subHeaderComponent={<SubHeaderComponent />}
                 />
                 {error && <p>{error}</p>}
-                <Button onClick={() => setShowCreateModal(true)}>Crear Auto</Button>
-                
+                <Button onClick={() => setShowCreateModal(true)}>
+                  Crear Auto
+                </Button>
               </div>
             </div>
           </Col>
@@ -156,7 +168,10 @@ export default function Prueba() {
                 type="text"
                 value={editedData.cantidad_pasajeros}
                 onChange={(e) =>
-                  setEditedData({ ...editedData, cantidad_pasajeros: e.target.value })
+                  setEditedData({
+                    ...editedData,
+                    cantidad_pasajeros: e.target.value,
+                  })
                 }
               />
             </Form.Group>
@@ -176,48 +191,54 @@ export default function Prueba() {
           </Form>
         </Modal.Body>
       </Modal>
-      <Modal show={showCreateModal} onHide={() => setShowCreateModal(false)}>
-  <Modal.Header closeButton>
-    <Modal.Title>Crear Auto</Modal.Title>
-  </Modal.Header>
-  <Modal.Body>
-    <Form onSubmit={handleCreateSubmit}>
-      <Form.Group controlId="marca">
-        <Form.Label>Marca</Form.Label>
-        <Form.Control
-          type="text"
-          value={newData.marca || ''}
-          onChange={(e) =>
-            setNewData({ ...newData, marca: e.target.value })
-          }
-        />
-      </Form.Group>
-      <Form.Group controlId="cantidad_pasajeros">
-        <Form.Label>Cantidad Pasajeros</Form.Label>
-        <Form.Control
-          type="text"
-          value={newData.cantidad_pasajeros || ''}
-          onChange={(e) =>
-            setNewData({ ...newData, cantidad_pasajeros: e.target.value })
-          }
-        />
-      </Form.Group>
-      <Form.Group controlId="placa">
-        <Form.Label>Placa</Form.Label>
-        <Form.Control
-          type="text"
-          value={newData.placa || ''}
-          onChange={(e) =>
-            setNewData({ ...newData, placa: e.target.value })
-          }
-        />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Crear
-      </Button>
-    </Form>
-  </Modal.Body>
-</Modal>
+      <Modal
+        show={showCreateModal}
+        onHide={() => {
+          setShowCreateModal(false);
+          setNewData({}); 
+        }}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Crear Auto</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={handleCreateSubmit}>
+            <Form.Group controlId="marca">
+              <Form.Label>Marca</Form.Label>
+              <Form.Control
+                type="text"
+                value={newData.marca || ""}
+                onChange={(e) =>
+                  setNewData({ ...newData, marca: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="cantidad_pasajeros">
+              <Form.Label>Cantidad Pasajeros</Form.Label>
+              <Form.Control
+                type="text"
+                value={newData.cantidad_pasajeros || ""}
+                onChange={(e) =>
+                  setNewData({ ...newData, cantidad_pasajeros: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="placa">
+              <Form.Label>Placa</Form.Label>
+              <Form.Control
+                type="text"
+                value={newData.placa || ""}
+                onChange={(e) =>
+                  setNewData({ ...newData, placa: e.target.value })
+                }
+              />
+            </Form.Group>
+            <Button variant="primary" type="submit">
+              Crear
+            </Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
