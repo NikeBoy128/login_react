@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Card, Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
-import { PencilSquare, Trash, Save, X } from 'react-bootstrap-icons'; // Importa los iconos necesarios
+import { PencilSquare, Trash, Save, X } from 'react-bootstrap-icons';
 import Sidebar from './sidebar';
 import 'bootstrap/dist/css/bootstrap.css';
 import DataTable from 'react-data-table-component';
 import { Link } from 'react-router-dom';
 
-
 export default function Usuarios() {
   const [data, setData] = useState([]);
   const [editedData, setEditedData] = useState({});
+  const [newData, setNewData] = useState({});
   const [error, setError] = useState('');
   const [filterText, setFilterText] = useState('');
   const [filteredItems, setFilteredItems] = useState([]);
   const filterTimeout = useRef(null);
   const [showModal, setShowModal] = useState(false);
-  const [grupos, setGrupos] = useState([]); // Agrega estado para los grupos
+  const [grupos, setGrupos] = useState([]);
   const [userData, setUserData] = useState({
     username: '',
     email: '',
@@ -74,14 +74,27 @@ export default function Usuarios() {
       try {
         const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/');
         setData(response.data);
-        const gruposResponse = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/grupos/');
-        setGrupos(gruposResponse.data);
+        const sortedData = response.data.sort((a, b) => a.id - b.id);
+        setData(sortedData);
       } catch (err) {
         setError('Failed to fetch data');
       }
     };
 
     fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchGrupos = async () => {
+      try {
+        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/grupos/'); // Cambia la URL por tu endpoint real
+        setGrupos(response.data);
+      } catch (err) {
+        setError('Failed to fetch viajes');
+      }
+    };
+
+    fetchGrupos();
   }, []);
 
   useEffect(() => {
@@ -103,7 +116,8 @@ export default function Usuarios() {
   const handleModal = (action, item = {}) => {
     if (action === 'edit') {
       setEditedData(item);
-      setUserData({ ...item, groups: item.groups.length > 0 ? item.groups[0].name : '' });
+      // Verifica si item.groups tiene elementos
+      setUserData({ ...item, groups: item.groups.length > 0 ? item.groups[0].id : '' });
     } else {
       setUserData({ groups: '' });
     }
@@ -132,7 +146,6 @@ export default function Usuarios() {
     }
   };
 
-
   return (
     <div style={{ height: '100vh' }}>
       <Container fluid>
@@ -148,6 +161,8 @@ export default function Usuarios() {
                   columns={columns}
                   data={filteredItems}
                   pagination
+                  paginationPerPage={5} // Mostrará inicialmente 5 elementos por página
+                  paginationRowsPerPageOptions={[5, 10, 15]} // Opciones para cambiar la cantidad de elementos por página
                   subHeader
                   subHeaderComponent={<SubHeaderComponent />}
                 />
@@ -225,16 +240,18 @@ export default function Usuarios() {
               />
             </Form.Group>
             <Form.Group controlId="groups">
-              <Form.Label>Groups</Form.Label>
+              <Form.Label>groups</Form.Label>
               <Form.Control
                 as="select"
-                name="groups"
-                value={userData.groups}
-                onChange={handleChange}
+                value={editedData.groups || ''}
+                onChange={(e) => {
+                  console.log(e.target.value);
+                  setEditedData({ ...editedData, groups: e.target.value });
+                }}
               >
-                <option value="">Select Group</option>
+                <option value="">Selecciona un grupo</option>
                 {grupos.map((grupo) => (
-                  <option key={grupo.id} value={grupo.name}>
+                  <option key={grupo.id} value={grupo.id}>
                     {grupo.name}
                   </option>
                 ))}

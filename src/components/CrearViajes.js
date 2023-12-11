@@ -4,6 +4,9 @@ import { Card, Container, Row, Col, Button, Form } from 'react-bootstrap';
 import Sidebar from './sidebar';
 import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.css';
+import { createBrowserHistory } from 'history'; // Importa createBrowserHistory para redirigir
+
+const history = createBrowserHistory();
 
 export default function CrearUsuario() {
   const [userData, setUserData] = useState({
@@ -18,6 +21,8 @@ export default function CrearUsuario() {
   });
   const [error, setError] = useState('');
   const [grupos, setGrupos] = useState([]);
+  const [newItem, setNewItem] = useState({});
+  const [data, setData] = useState([]);
 
   useEffect(() => {
     const fetchGrupos = async () => {
@@ -31,13 +36,23 @@ export default function CrearUsuario() {
 
     fetchGrupos();
   }, []);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/');
+      setData(response.data);
+    } catch (err) {
+      setError('Failed to fetch data');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/', userData);
       console.log(userData);
-      // Lógica adicional después de crear el usuario (redireccionamiento, actualización de datos, etc.)
+      fetchData(); // Actualizar la lista después de agregar el nuevo elemento
+      setNewItem({}); // Limpiar el formulario después   de agregar
+      history.push('/Usuarios'); // Redirige a la ruta '/Autos'
       window.location.reload(); // Recarga la página
     } catch (err) {
       setError('Failed to create item');
