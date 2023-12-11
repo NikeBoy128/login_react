@@ -1,20 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, Container, Row, Col, Button, Form } from 'react-bootstrap';
+import { Card, Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import Sidebar from './sidebar';
-import { Link } from 'react-router-dom'; // Asegúrate de importar Link desde react-router-dom
 import 'bootstrap/dist/css/bootstrap.css';
+import { Newspaper, PencilSquare, Trash } from 'react-bootstrap-icons';
+import DataTable from 'react-data-table-component';
 
 export default function Gastos() {
   const [data, setData] = useState([]);
   const [editedData, setEditedData] = useState({});
+  const [newData, setNewData] = useState({});
   const [error, setError] = useState('');
+  const [filterText, setFilterText] = useState('');
+  const [filteredItems, setFilteredItems] = useState([]);
+  const filterTimeout = React.useRef(null);
+  const [showModal, setShowModal] = useState(false);
+  const [viajes, setViajes] = useState([]);
+
+  const columns = [
+    { name: 'Id', selector: 'id' },
+    { name: 'descripcion', selector: 'descripcion' },
+    { name: 'monto', selector: 'monto' },
+    { name: 'viaje', selector: 'viaje' },
+    {
+      name: 'Imagenes', selector: 'imagen',
+      cell: (row) => (
+        <div>
+          <img src={row.imagen} alt="imagen" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+        </div>
+      ),
+    },
+    {
+      name: 'Acciones',
+      cell: (row) => (
+        <div>
+          <Button variant="warning" onClick={() => handleModal('edit', row)}>
+            <PencilSquare />
+          </Button>&nbsp;
+          <Button variant="danger" onClick={() => handleDelete(row.id)}>
+            <Trash />
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  useEffect(() => {
+    const fetchViajes = async () => {
+      try {
+        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/viajes/'); // Cambia la URL por tu endpoint real
+        setViajes(response.data);
+      } catch (err) {
+        setError('Failed to fetch viajes');
+      }
+    };
+
+    fetchViajes();
+  }, []);
+
+  const SubHeaderComponent = () => (
+    <div>
+      Buscar:{' '}
+      <input
+        type="text"
+        value={filterText}
+        onChange={(e) => {
+          clearTimeout(filterTimeout.current);
+          filterTimeout.current = setTimeout(() => setFilterText(e.target.value), 300);
+        }}
+      />
+    </div>
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/');
         setData(response.data);
+        const sortedData = response.data.sort((a, b) => a.id - b.id);
+        setData(sortedData);
       } catch (err) {
         setError('Failed to fetch data');
       }
@@ -23,27 +87,64 @@ export default function Gastos() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const filtered = data.filter((item) =>
+      item.descripcion.toLowerCase().includes(filterText.toLowerCase())
+    );
+    setFilteredItems(filtered);
+  }, [data, filterText]);
+
   const handleDelete = async (id) => {
     try {
       await axios.delete(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/${id}`);
-      setData(data.filter(item => item.id !== id));
+      setData(data.filter((item) => item.id !== id));
     } catch (err) {
       setError('Failed to delete item');
     }
   };
 
-  const handleEdit = (item) => {
-    setEditedData(item);
+  const handleModal = (action, item = {}) => {
+    if (action === 'edit') {
+      setEditedData(item);
+    } else {
+      setNewData({});
+    }
+    setShowModal(true);
   };
 
-  const handleUpdate = async () => {
+  const handleModalClose = () => {
+    setEditedData({});
+    setNewData({});
+    setShowModal(false);
+  };
+
+  const handleSave = async () => {
     try {
-      await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/${editedData.id}`, editedData);
-      const updatedData = data.map(item => (item.id === editedData.id ? editedData : item));
-      setData(updatedData);
-      setEditedData({});
+      if (editedData.id) {
+        await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/${editedData.id}`, editedData);
+        const updatedData = data.map((item) => (item.id === editedData.id ? editedData : item));
+        
+        setData(updatedData);
+      } else {
+        //const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/', newData);
+        // setData([...data, response.data]);
+        const formData = new FormData();
+        formData.append('imagen', newData.imagen);
+        formData.append('monto', newData.monto);
+        formData.append('viaje', newData.viaje);
+        formData.append('descripcion', newData.descripcion);
+        
+        axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/', formData, {
+         headers: {
+          'Content-Type': 'multipart/form-data',
+          },
+        })
+        console.log({ newData })
+        // setData(formData)
+      }
+      handleModalClose();
     } catch (err) {
-      setError('Failed to update item');
+      setError('Failed to save item');
     }
   };
 
@@ -57,74 +158,103 @@ export default function Gastos() {
           <Col sm={9}>
             <div className="dashboard-content">
               <div className="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
-                <table className="table table-bordered table-striped">
-                  <thead>
-                    <tr>
-                      <th>Id</th>
-                      <th>descripcion</th>
-                      <th>monto</th>
-                      <th>viaje</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.map(item => (
-                      <tr key={item.id}>
-                        <td>{item.id}</td>
-                        <td>
-                          {editedData.id === item.id ? (
-                            <Form.Control
-                              type="text"
-                              value={editedData.descripcion}
-                              onChange={(e) => setEditedData({ ...editedData, descripcion: e.target.value })}
-                            />
-                          ) : (
-                            item.descripcion
-                          )}
-                        </td>
-                        <td>
-                          {editedData.id === item.id ? (
-                            <Form.Control
-                              type="text"
-                              value={editedData.monto}
-                              onChange={(e) => setEditedData({ ...editedData, monto: e.target.value })}
-                            />
-                          ) : (
-                            item.monto
-                          )}
-                        </td>
-                        <td>
-                          {editedData.id === item.id ? (
-                            <Form.Control
-                              type="text"
-                              value={editedData.viaje}
-                              onChange={(e) => setEditedData({ ...editedData, viaje: e.target.value })}
-                            />
-                          ) : (
-                            item.viaje
-                          )}
-                        </td>
-                        <td>
-                          {editedData.id === item.id ? (
-                            <Button variant="success" onClick={handleUpdate}>Guardar</Button>
-                          ) : (
-                            <Button variant="warning" onClick={() => handleEdit(item)}>Editar</Button>
-                          )}
-                          <Button variant="danger" onClick={() => handleDelete(item.id)}>Eliminar</Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                {error && <Card.Text>{error}</Card.Text>}
-                <Link to="/CrearAuto">
-                  <Button>Crear Auto</Button>
-                </Link>
+                <DataTable
+                  title="Gastos"
+                  columns={columns}
+                  data={filteredItems}
+                  pagination
+                  subHeader
+                  subHeaderComponent={<SubHeaderComponent />}
+                />
+                {error && <p>{error}</p>}
+                <Button onClick={() => handleModal('create')}>Crear Gasto</Button>
               </div>
             </div>
           </Col>
         </Row>
       </Container>
+      <Modal show={showModal} onHide={handleModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{editedData.id ? 'Editar Gasto' : 'Crear Nuevo Gasto'}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="descripcion">
+              <Form.Label>descripcion</Form.Label>
+              <Form.Control
+                type="text"
+                value={editedData.descripcion || newData.descripcion || ''}
+                onChange={(e) => {
+                  if (editedData.id) {
+                    setEditedData({ ...editedData, descripcion: e.target.value });
+                  } else {
+                    setNewData({ ...newData, descripcion: e.target.value });
+                  }
+                }}
+              />
+            </Form.Group>
+            <Form.Group controlId="monto">
+              <Form.Label>monto</Form.Label>
+              <Form.Control
+                type="text"
+                value={editedData.monto || newData.monto || ''}
+                onChange={(e) => {
+                  if (editedData.id) {
+                    setEditedData({ ...editedData, monto: e.target.value });
+                  } else {
+                    setNewData({ ...newData, monto: e.target.value });
+                  }
+                }}
+              />
+            </Form.Group>
+            <Form.Group controlId="viaje">
+              <Form.Label>Viaje</Form.Label>
+              <Form.Control
+                as="select"
+
+                value={editedData.viaje || newData.viaje || ''}
+                onChange={(e) => {
+                  console.log(e.target.value); // Verifica qué valor se imprime en la consola
+                  if (editedData.id) {
+                    setEditedData({ ...editedData, viaje: e.target.value });
+                  } else {
+                    setNewData({ ...newData, viaje: e.target.value });
+                  }
+                }}
+              >
+                <option value="">Selecciona un viaje</option>
+                {viajes.map((viaje) => (
+                  <option key={viaje.id} value={viaje.id}>
+                    {viaje.origen}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="imagen">
+              <Form.Label>Imagen</Form.Label>
+              <Form.Control
+                type="file"
+                onChange={(e) => {
+                  console.log(e.target.files[0]); // Verifica qué valor se imprime en la consola
+                  if (editedData.id) {
+                    setEditedData({ ...editedData, imagen: e.target.files[0] });
+                  } else {
+                    setNewData({ ...newData, imagen: e.target.files[0] });
+                  }
+                }}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleSave}>
+            {editedData.id ? 'Guardar' : 'Crear'}
+          </Button>
+          <Button variant="secondary" onClick={handleModalClose}>
+            Cancelar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

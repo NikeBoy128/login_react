@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Card, Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
 import Sidebar from './sidebar';
 import 'bootstrap/dist/css/bootstrap.css';
-import { PencilSquare, Trash, Save, X } from 'react-bootstrap-icons';
+import { PencilSquare, Trash } from 'react-bootstrap-icons';
 import DataTable from 'react-data-table-component';
 
 export default function Autos() {
@@ -15,6 +15,7 @@ export default function Autos() {
   const [filteredItems, setFilteredItems] = useState([]);
   const filterTimeout = useRef(null);
   const [showModal, setShowModal] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
 
   const columns = [
     { name: 'Id', selector: 'id' },
@@ -26,35 +27,69 @@ export default function Autos() {
       cell: (row) => (
         <div>
           <Button variant="warning" onClick={() => handleModal('edit', row)}>
-            <PencilSquare /> 
+            <PencilSquare />
           </Button>&nbsp;
           <Button variant="danger" onClick={() => handleDelete(row.id)}>
-            <Trash /> 
+            <Trash />
           </Button>
         </div>
       ),
     },
   ];
 
+  const handleFilterChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleFilter();
+    }
+  };
+
+  const handleFilter = () => {
+    const searchText = searchInput.toLowerCase();
+    setFilterText(searchText);
+
+    const filtered = data.filter(
+      (item) =>
+        item.marca.toLowerCase().includes(searchText) ||
+        item.cantidad_pasajeros.toLowerCase().includes(searchText) ||
+        item.placa.toLowerCase().includes(searchText)
+    );
+
+    setFilteredItems(filtered);
+  };
+
   const SubHeaderComponent = () => (
     <div>
       Buscar:{' '}
       <input
         type="text"
-        value={filterText}
-        onChange={(e) => {
-          clearTimeout(filterTimeout.current);
-          filterTimeout.current = setTimeout(() => setFilterText(e.target.value), 300);
-        }}
+        value={searchInput}
+        onChange={handleFilterChange}
+        onBlur={handleFilter}
+        onKeyPress={handleKeyPress}
       />
     </div>
   );
+
+  useEffect(() => {
+    if (searchInput.length > 0) {
+      handleFilter();
+    } else {
+      setFilteredItems(data);
+    }
+  }, [searchInput, data]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/');
         setData(response.data);
+        const sortedData = response.data.sort((a, b) => a.id - b.id);
+        setData(sortedData);
+        setFilteredItems(sortedData);
       } catch (err) {
         setError('Failed to fetch data');
       }
@@ -63,17 +98,12 @@ export default function Autos() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const filtered = data.filter((item) =>
-      item.marca.toLowerCase().includes(filterText.toLowerCase())
-    );
-    setFilteredItems(filtered);
-  }, [data, filterText]);
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/${id}`);
-      setData(data.filter((item) => item.id !== id));
+      const updatedData = data.filter((item) => item.id !== id);
+      setData(updatedData);
+      setFilteredItems(updatedData);
     } catch (err) {
       setError('Failed to delete item');
     }
@@ -100,9 +130,11 @@ export default function Autos() {
         await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/${editedData.id}`, editedData);
         const updatedData = data.map((item) => (item.id === editedData.id ? editedData : item));
         setData(updatedData);
+        setFilteredItems(updatedData);
       } else {
         const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/', newData);
         setData([...data, response.data]);
+        setFilteredItems([...filteredItems, response.data]);
       }
       handleModalClose();
     } catch (err) {
