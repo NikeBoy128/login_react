@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Card, Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
-import { PencilSquare, Trash, Save, X } from 'react-bootstrap-icons';
 import Sidebar from './sidebar';
 import 'bootstrap/dist/css/bootstrap.css';
+import { PencilSquare, Trash } from 'react-bootstrap-icons';
 import DataTable from 'react-data-table-component';
-import { Link } from 'react-router-dom';
 
 export default function Usuarios() {
   const [data, setData] = useState([]);
@@ -16,24 +15,16 @@ export default function Usuarios() {
   const [filteredItems, setFilteredItems] = useState([]);
   const filterTimeout = useRef(null);
   const [showModal, setShowModal] = useState(false);
-  const [grupos, setGrupos] = useState([]);
-  const [userData, setUserData] = useState({
-    username: '',
-    email: '',
-    first_name: '',
-    last_name: '',
-    password: '',
-    is_staff: false,
-    is_active: false,
-    groups: [],
-  });
+  const [searchInput, setSearchInput] = useState('');
+  const [Autos, setAutos] = useState([]);
 
   const columns = [
-    { name: 'Username', selector: 'username' },
-    { name: 'Email', selector: 'email' },
-    { name: 'First Name', selector: 'first_name' },
-    { name: 'Last Name', selector: 'last_name' },
-    { name: 'Group', selector: 'groups' },
+    { name: 'Id', selector: 'id' },
+    { name: 'username', selector: 'username' },
+    { name: 'email', selector: 'email' },
+    { name: 'first_name', selector: 'first_name' },
+    { name: 'last_name', selector: 'last_name' },
+    { name: 'groups', selector: 'groups' },
     {
       name: 'Acciones',
       cell: (row) => (
@@ -49,25 +40,61 @@ export default function Usuarios() {
     },
   ];
 
+  useEffect(() => {
+    const fetchAutos = async () => {
+      try {
+        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/grupos/');
+        setAutos(response.data);
+      } catch (err) {
+        setError('Failed to fetch Usuarios');
+      }
+    };
+
+    fetchAutos();
+  }, []);
+
+  const handleFilterChange = (e) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleFilter();
+    }
+  };
+
+  const handleFilter = () => {
+    const searchText = searchInput.toLowerCase();
+    setFilterText(searchText);
+
+    const filtered = data.filter(
+      (item) =>
+        item.origen.toLowerCase().includes(searchText)
+    );
+
+    setFilteredItems(filtered);
+  };
+
   const SubHeaderComponent = () => (
     <div>
       Buscar:{' '}
       <input
         type="text"
-        value={filterText}
-        onChange={(e) => {
-          clearTimeout(filterTimeout.current);
-          filterTimeout.current = setTimeout(() => setFilterText(e.target.value), 300);
-        }}
+        value={searchInput}
+        onChange={handleFilterChange}
+        onBlur={handleFilter}
+        onKeyPress={handleKeyPress}
       />
     </div>
   );
 
-  const handleChange = (e) => {
-    const { name, value, type } = e.target;
-    const val = type === 'checkbox' ? e.target.checked : value;
-    setUserData({ ...userData, [name]: type === 'checkbox' ? e.target.checked : (name === 'groups' ? [...userData.groups, val] : val) });
-  };
+  useEffect(() => {
+    if (searchInput.length > 0) {
+      handleFilter();
+    } else {
+      setFilteredItems(data);
+    }
+  }, [searchInput, data]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,6 +103,7 @@ export default function Usuarios() {
         setData(response.data);
         const sortedData = response.data.sort((a, b) => a.id - b.id);
         setData(sortedData);
+        setFilteredItems(sortedData);
       } catch (err) {
         setError('Failed to fetch data');
       }
@@ -84,30 +112,12 @@ export default function Usuarios() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchGrupos = async () => {
-      try {
-        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/grupos/'); // Cambia la URL por tu endpoint real
-        setGrupos(response.data);
-      } catch (err) {
-        setError('Failed to fetch viajes');
-      }
-    };
-
-    fetchGrupos();
-  }, []);
-
-  useEffect(() => {
-    const filtered = data.filter((item) =>
-      item.username.toLowerCase().includes(filterText.toLowerCase())
-    );
-    setFilteredItems(filtered);
-  }, [data, filterText]);
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/${id}`);
-      setData(data.filter((item) => item.id !== id));
+      const updatedData = data.filter((item) => item.id !== id);
+      setData(updatedData);
+      setFilteredItems(updatedData);
     } catch (err) {
       setError('Failed to delete item');
     }
@@ -116,17 +126,15 @@ export default function Usuarios() {
   const handleModal = (action, item = {}) => {
     if (action === 'edit') {
       setEditedData(item);
-      // Verifica si item.groups tiene elementos
-      setUserData({ ...item, groups: item.groups.length > 0 ? item.groups[0].id : '' });
     } else {
-      setUserData({ groups: '' });
+      setNewData({});
     }
     setShowModal(true);
   };
 
   const handleModalClose = () => {
     setEditedData({});
-    setUserData({});
+    setNewData({});
     setShowModal(false);
   };
 
@@ -136,9 +144,11 @@ export default function Usuarios() {
         await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/${editedData.id}`, editedData);
         const updatedData = data.map((item) => (item.id === editedData.id ? editedData : item));
         setData(updatedData);
+        setFilteredItems(updatedData);
       } else {
-        const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/', userData);
+        const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/', newData);
         setData([...data, response.data]);
+        setFilteredItems([...filteredItems, response.data]);
       }
       handleModalClose();
     } catch (err) {
@@ -157,21 +167,15 @@ export default function Usuarios() {
             <div className="dashboard-content">
               <div className="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
                 <DataTable
-                  title="Usuarios"
+                  title="Autos"
                   columns={columns}
                   data={filteredItems}
                   pagination
-                  paginationPerPage={5} // Mostrará inicialmente 5 elementos por página
-                  paginationRowsPerPageOptions={[5, 10, 15]} // Opciones para cambiar la cantidad de elementos por página
                   subHeader
                   subHeaderComponent={<SubHeaderComponent />}
                 />
                 {error && <p>{error}</p>}
-                <Link to="/CrearUsuario">
-                  <Button>
-                    <PencilSquare />
-                  </Button>
-                </Link>
+                <Button onClick={() => handleModal('create')}>Crear Viaje</Button>
               </div>
             </div>
           </Col>
@@ -179,62 +183,62 @@ export default function Usuarios() {
       </Container>
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{editedData.id ? 'Editar Usuario' : 'Crear Nuevo Usuario'}</Modal.Title>
+          <Modal.Title>{editedData.id ? 'Editar Auto' : 'Crear Nuevo Auto'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="username">
-              <Form.Label>Username</Form.Label>
+              <Form.Label>username</Form.Label>
               <Form.Control
                 type="text"
-                value={editedData.username || userData.username || ''}
+                value={editedData.username || newData.username || ''}
                 onChange={(e) => {
                   if (editedData.id) {
                     setEditedData({ ...editedData, username: e.target.value });
                   } else {
-                    setUserData({ ...userData, username: e.target.value });
+                    setNewData({ ...newData, username: e.target.value });
                   }
                 }}
               />
             </Form.Group>
             <Form.Group controlId="email">
-              <Form.Label>Email</Form.Label>
+              <Form.Label>email</Form.Label>
               <Form.Control
-                type="email"
-                value={editedData.email || userData.email || ''}
+                type="text"
+                value={editedData.email || newData.email || ''}
                 onChange={(e) => {
                   if (editedData.id) {
                     setEditedData({ ...editedData, email: e.target.value });
                   } else {
-                    setUserData({ ...userData, email: e.target.value });
+                    setNewData({ ...newData, email: e.target.value });
                   }
                 }}
               />
             </Form.Group>
             <Form.Group controlId="first_name">
-              <Form.Label>First Name</Form.Label>
+              <Form.Label>first_name</Form.Label>
               <Form.Control
                 type="text"
-                value={editedData.first_name || userData.first_name || ''}
+                value={editedData.first_name || newData.first_name || ''}
                 onChange={(e) => {
                   if (editedData.id) {
                     setEditedData({ ...editedData, first_name: e.target.value });
                   } else {
-                    setUserData({ ...userData, first_name: e.target.value });
+                    setNewData({ ...newData, first_name: e.target.value });
                   }
                 }}
               />
             </Form.Group>
             <Form.Group controlId="last_name">
-              <Form.Label>Last Name</Form.Label>
+              <Form.Label>last_name</Form.Label>
               <Form.Control
-                type="last_name"
-                value={editedData.last_name || userData.last_name || ''}
+                type="text"
+                value={editedData.last_name || newData.last_name || ''}
                 onChange={(e) => {
                   if (editedData.id) {
                     setEditedData({ ...editedData, last_name: e.target.value });
                   } else {
-                    setUserData({ ...userData, last_name: e.target.value });
+                    setNewData({ ...newData, last_name: e.target.value });
                   }
                 }}
               />
@@ -243,16 +247,20 @@ export default function Usuarios() {
               <Form.Label>groups</Form.Label>
               <Form.Control
                 as="select"
-                value={editedData.groups || ''}
+                multiple
+                value={editedData.groups || newData.groups || []}
                 onChange={(e) => {
-                  console.log(e.target.value);
-                  setEditedData({ ...editedData, groups: e.target.value });
+                  const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
+                  if (editedData.groups) {
+                    setEditedData({ ...editedData, groups: selectedOptions });
+                  } else {
+                    setNewData({ ...newData, groups: selectedOptions });
+                  }
                 }}
               >
-                <option value="">Selecciona un grupo</option>
-                {grupos.map((grupo) => (
-                  <option key={grupo.id} value={grupo.id}>
-                    {grupo.name}
+                {Autos.map((auto) => (
+                  <option key={auto.id} value={auto.id}>
+                    {auto.name}
                   </option>
                 ))}
               </Form.Control>
@@ -261,10 +269,10 @@ export default function Usuarios() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleSave}>
-            <Save /> {editedData.id ? 'Guardar' : 'Crear'}
+            {editedData.id ? 'Guardar' : 'Crear'}
           </Button>
           <Button variant="secondary" onClick={handleModalClose}>
-            <X /> Cancelar
+            Cancelar
           </Button>
         </Modal.Footer>
       </Modal>
