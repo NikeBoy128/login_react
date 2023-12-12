@@ -23,7 +23,8 @@ export default function Gastos() {
     { name: 'monto', selector: 'monto' },
     { name: 'viaje', selector: 'viaje' },
     {
-      name: 'Imagenes', selector: 'imagen',
+      name: 'Imagenes',
+      selector: 'imagen',
       cell: (row) => (
         <div>
           <img src={row.imagen} alt="imagen" style={{ maxWidth: '100px', maxHeight: '100px' }} />
@@ -48,7 +49,7 @@ export default function Gastos() {
   useEffect(() => {
     const fetchViajes = async () => {
       try {
-        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/viajes/'); // Cambia la URL por tu endpoint real
+        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/viajes/');
         setViajes(response.data);
       } catch (err) {
         setError('Failed to fetch viajes');
@@ -106,10 +107,13 @@ export default function Gastos() {
   const handleModal = (action, item = {}) => {
     if (action === 'edit') {
       setEditedData(item);
-    } else {
+      setShowModal(true);
+    } else if (action === 'create') {
       setNewData({});
+      setShowModal(true);
+    } else {
+      setShowModal(false);
     }
-    setShowModal(true);
   };
 
   const handleModalClose = () => {
@@ -121,26 +125,40 @@ export default function Gastos() {
   const handleSave = async () => {
     try {
       if (editedData.id) {
-        await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/${editedData.id}`, editedData);
-        const updatedData = data.map((item) => (item.id === editedData.id ? editedData : item));
-        
-        setData(updatedData);
+        let updatedData = editedData;
+        if (editedData.imagen && editedData.imagen instanceof File) {
+          const formData = new FormData();
+          formData.append('imagen', editedData.imagen); // Asegúrate de que newData.imagen sea un archivo
+          formData.append('monto', editedData.monto);
+          formData.append('viaje', editedData.viaje);
+          formData.append('descripcion', editedData.descripcion);
+  
+          const response = await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/${editedData.id}`, formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          });
+          
+          updatedData = { ...editedData, imagen: response.data.imagen };
+        }
+  
+        await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/${editedData.id}`, updatedData);
+        const updatedGastos = data.map((item) => (item.id === editedData.id ? updatedData : item));
+        setData(updatedGastos);
       } else {
-        //const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/', newData);
-        // setData([...data, response.data]);
         const formData = new FormData();
         formData.append('imagen', newData.imagen);
         formData.append('monto', newData.monto);
         formData.append('viaje', newData.viaje);
         formData.append('descripcion', newData.descripcion);
-        
-        axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/', formData, {
-         headers: {
-          'Content-Type': 'multipart/form-data',
+  
+        const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/gastos/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
           },
-        })
-        console.log({ newData })
-        // setData(formData)
+        });
+  
+        setData([...data, response.data]);
       }
       handleModalClose();
     } catch (err) {
@@ -211,10 +229,8 @@ export default function Gastos() {
               <Form.Label>Viaje</Form.Label>
               <Form.Control
                 as="select"
-
                 value={editedData.viaje || newData.viaje || ''}
                 onChange={(e) => {
-                  console.log(e.target.value); // Verifica qué valor se imprime en la consola
                   if (editedData.id) {
                     setEditedData({ ...editedData, viaje: e.target.value });
                   } else {
@@ -235,11 +251,13 @@ export default function Gastos() {
               <Form.Control
                 type="file"
                 onChange={(e) => {
-                  console.log(e.target.files[0]); // Verifica qué valor se imprime en la consola
-                  if (editedData.id) {
-                    setEditedData({ ...editedData, imagen: e.target.files[0] });
-                  } else {
-                    setNewData({ ...newData, imagen: e.target.files[0] });
+                  if (e.target.files.length > 0) {
+                    const file = e.target.files[0];
+                    if (editedData.id) {
+                      setEditedData({ ...editedData, imagen: file });
+                    } else {
+                      setNewData({ ...newData, imagen: file });
+                    }
                   }
                 }}
               />

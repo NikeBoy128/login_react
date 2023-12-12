@@ -10,7 +10,6 @@ import Viajes from './components/Viajes';
 import Gastos from './components/Gastos'
 import Grupos from './components/Grupos'
 import CrearUsuario from './components/CrearUsuario';
-import CrearViajes from './components/CrearViajes';
 import PrivateRoute from './PrivateRoute';
 import PrivateRouteDashboard from './components/PrivateRouteDashboard'
 
@@ -27,7 +26,6 @@ function App() {
           <Route path="/Gastos" element={<PrivateRoute><Gastos /></PrivateRoute>}/>
           <Route path="/Grupos" element={<PrivateRoute><Grupos /></PrivateRoute>}/>
           <Route path="/CrearUsuario" element={<PrivateRoute><CrearUsuario /></PrivateRoute>} />
-          <Route path="/CrearVaijes" element={<PrivateRoute><CrearViajes /></PrivateRoute>} />
           <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
           
           <Route path="/" element={<PrivateRouteDashboard />} />

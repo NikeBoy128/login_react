@@ -15,8 +15,6 @@ export default function CrearUsuario() {
     first_name: '',
     last_name: '',
     password: '',
-    is_staff: false,
-    is_active: false,
     groups: [],
   });
   const [error, setError] = useState('');
@@ -36,6 +34,7 @@ export default function CrearUsuario() {
 
     fetchGrupos();
   }, []);
+  
   const fetchData = async () => {
     try {
       const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/');
@@ -129,40 +128,26 @@ export default function CrearUsuario() {
                       onChange={handleChange}
                     />
                   </Form.Group>
-                  <Form.Group className="mb-3" controlId="formIsStaff">
-                    <Form.Check
-                      type="checkbox"
-                      label="Is Staff"
-                      name="is_staff"
-                      checked={userData.is_staff}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="mb-3" controlId="formIsActive">
-                    <Form.Check
-                      type="checkbox"
-                      label="Is Active"
-                      name="is_active"
-                      checked={userData.is_active}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
                   <Form.Group className="mb-3" controlId="formGroups">
-                    <Form.Label>Groups</Form.Label>
-                    <Form.Control
-                      as="select"
-                      name="groups"
-                      value={userData.groups}
-                      onChange={handleChange}
-                    >
-                      <option value="">Select Group</option>
-                      {grupos.map((grupo) => (
-                        <option key={grupo.id} value={grupo.name}>
-                          {grupo.name}
-                        </option>
-                      ))}
-                    </Form.Control>
-                  </Form.Group>
+  <Form.Label>Groups</Form.Label>
+  <Form.Control
+    as="select"
+    name="groups"
+    value={userData.groups}
+    onChange={(e) => {
+      const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
+      setUserData({ ...userData, groups: selectedOptions });
+    }}
+    multiple // Habilita la selección múltiple
+  >
+    <option value="">Select Group</option>
+    {grupos.map((grupo) => (
+      <option key={grupo.id} value={grupo.name}>
+        {grupo.name}
+      </option>
+    ))}
+  </Form.Control>
+</Form.Group>
                   <Button variant="primary" onClick={handleSubmit}>Crear</Button>
                 </Form>
                 {error && <Card.Text>{error}</Card.Text>}

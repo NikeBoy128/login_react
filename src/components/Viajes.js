@@ -16,6 +16,8 @@ export default function Viajes() {
   const filterTimeout = useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+  const [Usuarios, setUsuarios] = useState([]);
+  const [autos, setAutos] = useState([]);
 
   const columns = [
     { name: 'Id', selector: 'id' },
@@ -39,6 +41,33 @@ export default function Viajes() {
       ),
     },
   ];
+
+  useEffect(() => {
+    const fetchUsuarios = async () => {
+      try {
+        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/');
+        setUsuarios(response.data);
+      } catch (err) {
+        setError('Failed to fetch Usuarios');
+      }
+    };
+
+    fetchUsuarios();
+  }, []);
+
+  useEffect(() => {
+    const fetchAutos = async () => {
+      try {
+        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/');
+        setAutos(response.data);
+      } catch (err) {
+        setError('Failed to fetch Usuarios');
+      }
+    };
+
+    fetchAutos();
+  }, []);
+
 
   const handleFilterChange = (e) => {
     setSearchInput(e.target.value);
@@ -101,7 +130,7 @@ export default function Viajes() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/${id}`);
+      await axios.delete(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/viajes/${id}`);
       const updatedData = data.filter((item) => item.id !== id);
       setData(updatedData);
       setFilteredItems(updatedData);
@@ -128,12 +157,12 @@ export default function Viajes() {
   const handleSave = async () => {
     try {
       if (editedData.id) {
-        await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/${editedData.id}`, editedData);
+        await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/viajes/${editedData.id}`, editedData);
         const updatedData = data.map((item) => (item.id === editedData.id ? editedData : item));
         setData(updatedData);
         setFilteredItems(updatedData);
       } else {
-        const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/', newData);
+        const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/viajes/', newData);
         setData([...data, response.data]);
         setFilteredItems([...filteredItems, response.data]);
       }
@@ -174,47 +203,103 @@ export default function Viajes() {
         </Modal.Header>
         <Modal.Body>
           <Form>
-            <Form.Group controlId="Conductor">
-              <Form.Label>Conductor</Form.Label>
+          <Form.Group controlId="Conductor">
+              <Form.Label>conductor</Form.Label>
               <Form.Control
-                type="text"
-                value={editedData.Conductor || newData.Conductor || ''}
+                as="select"
+                value={editedData.conductor || newData.conductor || ''}
                 onChange={(e) => {
                   if (editedData.id) {
-                    setEditedData({ ...editedData, Conductor: e.target.value });
+                    setEditedData({ ...editedData, conductor: e.target.value });
                   } else {
-                    setNewData({ ...newData, Conductor: e.target.value });
+                    setNewData({ ...newData, conductor: e.target.value });
+                  }
+                }}
+              >
+                <option value="">Selecciona un viaje</option>
+                {Usuarios.map((viaje) => (
+                  <option key={viaje.id} value={viaje.id}>
+                    {viaje.username}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+            <Form.Group controlId="origen">
+              <Form.Label>origen</Form.Label>
+              <Form.Control
+                type="text"
+                value={editedData.origen || newData.origen || ''}
+                onChange={(e) => {
+                  if (editedData.id) {
+                    setEditedData({ ...editedData, origen: e.target.value });
+                  } else {
+                    setNewData({ ...newData, origen: e.target.value });
                   }
                 }}
               />
             </Form.Group>
-            <Form.Group controlId="cantidad_pasajeros">
-              <Form.Label>Cantidad Pasajeros</Form.Label>
+            <Form.Group controlId="origen">
+              <Form.Label>origen</Form.Label>
               <Form.Control
                 type="text"
-                value={editedData.cantidad_pasajeros || newData.cantidad_pasajeros || ''}
+                value={editedData.origen || newData.origen || ''}
                 onChange={(e) => {
                   if (editedData.id) {
-                    setEditedData({ ...editedData, cantidad_pasajeros: e.target.value });
+                    setEditedData({ ...editedData, origen: e.target.value });
                   } else {
-                    setNewData({ ...newData, cantidad_pasajeros: e.target.value });
+                    setNewData({ ...newData, origen: e.target.value });
                   }
                 }}
               />
             </Form.Group>
-            <Form.Group controlId="placa">
-              <Form.Label>Placa</Form.Label>
+            <Form.Group controlId="fecha">
+              <Form.Label>fecha</Form.Label>
               <Form.Control
-                type="text"
-                value={editedData.placa || newData.placa || ''}
+                type="date"
+                value={editedData.fecha || newData.fecha || ''}
                 onChange={(e) => {
                   if (editedData.id) {
-                    setEditedData({ ...editedData, placa: e.target.value });
+                    setEditedData({ ...editedData, fecha: e.target.value });
                   } else {
-                    setNewData({ ...newData, placa: e.target.value });
+                    setNewData({ ...newData, fecha: e.target.value });
                   }
                 }}
               />
+            </Form.Group>
+            <Form.Group controlId="hora">
+              <Form.Label>hora</Form.Label>
+              <Form.Control
+                type="time"
+                value={editedData.hora || newData.hora || ''}
+                onChange={(e) => {
+                  if (editedData.id) {
+                    setEditedData({ ...editedData, hora: e.target.value });
+                  } else {
+                    setNewData({ ...newData, hora: e.target.value });
+                  }
+                }}
+              />
+            </Form.Group>
+            <Form.Group controlId="Auto">
+              <Form.Label>Auto</Form.Label>
+              <Form.Control
+                as="select"
+                value={editedData.auto || newData.auto || ''}
+                onChange={(e) => {
+                  if (editedData.id) {
+                    setEditedData({ ...editedData, auto: e.target.value });
+                  } else {
+                    setNewData({ ...newData, auto: e.target.value });
+                  }
+                }}
+              >
+                <option value="">Selecciona un viaje</option>
+                {autos.map((auto) => (
+                  <option key={auto.id} value={auto.id}>
+                    {auto.placa}
+                  </option>
+                ))}
+              </Form.Control>
             </Form.Group>
           </Form>
         </Modal.Body>
