@@ -34,7 +34,7 @@ export default function CrearUsuario() {
 
     fetchGrupos();
   }, []);
-  
+
   const fetchData = async () => {
     try {
       const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/');
@@ -129,25 +129,25 @@ export default function CrearUsuario() {
                     />
                   </Form.Group>
                   <Form.Group className="mb-3" controlId="formGroups">
-  <Form.Label>Groups</Form.Label>
-  <Form.Control
-    as="select"
-    name="groups"
-    value={userData.groups}
-    onChange={(e) => {
-      const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-      setUserData({ ...userData, groups: selectedOptions });
-    }}
-    multiple // Habilita la selección múltiple
-  >
-    <option value="">Select Group</option>
-    {grupos.map((grupo) => (
-      <option key={grupo.id} value={grupo.name}>
-        {grupo.name}
-      </option>
-    ))}
-  </Form.Control>
-</Form.Group>
+                    <Form.Label>Groups</Form.Label>
+                    <Form.Control
+                      as="select"
+                      name="groups"
+                      value={userData.groups}
+                      onChange={(e) => {
+                        const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
+                        setUserData({ ...userData, groups: selectedOptions });
+                      }}
+                      multiple // Habilita la selección múltiple
+                    >
+                      <option value="">Select Group</option>
+                      {grupos.map((grupo) => (
+                        <option key={grupo.id} value={grupo.name}>
+                          {grupo.name}
+                        </option>
+                      ))}
+                    </Form.Control>
+                  </Form.Group>
                   <Button variant="primary" onClick={handleSubmit}>Crear</Button>
                 </Form>
                 {error && <Card.Text>{error}</Card.Text>}

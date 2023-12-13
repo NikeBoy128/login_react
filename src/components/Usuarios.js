@@ -5,6 +5,7 @@ import Sidebar from './sidebar';
 import 'bootstrap/dist/css/bootstrap.css';
 import { PencilSquare, Trash } from 'react-bootstrap-icons';
 import DataTable from 'react-data-table-component';
+import { Link } from 'react-router-dom';
 
 export default function Usuarios() {
   const [data, setData] = useState([]);
@@ -155,6 +156,7 @@ export default function Usuarios() {
       setError('Failed to save item');
     }
   };
+  
 
   return (
     <div style={{ height: '100vh' }}>
@@ -175,7 +177,9 @@ export default function Usuarios() {
                   subHeaderComponent={<SubHeaderComponent />}
                 />
                 {error && <p>{error}</p>}
-                <Button onClick={() => handleModal('create')}>Crear Viaje</Button>
+                <Link to="/CrearUsuario">
+                  <Button>Crear Usuario</Button>
+                </Link>
               </div>
             </div>
           </Col>
@@ -243,28 +247,7 @@ export default function Usuarios() {
                 }}
               />
             </Form.Group>
-            <Form.Group controlId="groups">
-              <Form.Label>groups</Form.Label>
-              <Form.Control
-                as="select"
-                multiple
-                value={editedData.groups || newData.groups || []}
-                onChange={(e) => {
-                  const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-                  if (editedData.groups) {
-                    setEditedData({ ...editedData, groups: selectedOptions });
-                  } else {
-                    setNewData({ ...newData, groups: selectedOptions });
-                  }
-                }}
-              >
-                {Autos.map((auto) => (
-                  <option key={auto.id} value={auto.id}>
-                    {auto.name}
-                  </option>
-                ))}
-              </Form.Control>
-            </Form.Group>
+           
           </Form>
         </Modal.Body>
         <Modal.Footer>
