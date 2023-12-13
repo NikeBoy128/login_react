@@ -15,7 +15,7 @@ import PrivateRouteDashboard from './components/PrivateRouteDashboard'
 
 function App() {
   return (
-    <Router>
+    <Router basename="/app">
       <AuthProvider>
         <Routes>
           <Route path="/signup" element={<Signup />} />
