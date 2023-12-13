@@ -238,16 +238,16 @@ export default function Viajes() {
                 }}
               />
             </Form.Group>
-            <Form.Group controlId="origen">
-              <Form.Label>origen</Form.Label>
+            <Form.Group controlId="destino">
+              <Form.Label>destino</Form.Label>
               <Form.Control
                 type="text"
-                value={editedData.origen || newData.origen || ''}
+                value={editedData.destino || newData.destino || ''}
                 onChange={(e) => {
                   if (editedData.id) {
-                    setEditedData({ ...editedData, origen: e.target.value });
+                    setEditedData({ ...editedData, destino: e.target.value });
                   } else {
-                    setNewData({ ...newData, origen: e.target.value });
+                    setNewData({ ...newData, destino: e.target.value });
                   }
                 }}
               />
