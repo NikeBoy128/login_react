@@ -181,7 +181,7 @@ export default function Gastos() {
           <Col sm={4}>
             <Sidebar />
           </Col>
-          <Col sm={6}>
+          <Col sm={7}>
             <div className="dashboard-content">
               <div className="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
 
@@ -195,16 +195,16 @@ export default function Gastos() {
                   customStyles={{
                     header: {
                       style: {
-                        backgroundColor: 'black',
-                        color: 'white',
+                        backgroundColor: 'white',
+                        color: 'black',
                         textAlign: 'center',
                       },
                     },
                     rows: {
                       style: {
-                        backgroundColor: '#808080',
-                        marginBottom: '3px',
-                        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
+    
+                        marginBottom: '1px',
+                        boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.5)',
                         textAlign: 'center',
                       },
                     },
@@ -261,13 +261,20 @@ export default function Gastos() {
             <Form.Group controlId="monto">
               <Form.Label>monto</Form.Label>
               <Form.Control
-                type="text"
+                textAlign="center"
+                type="money"
                 value={editedData.monto || newData.monto || ''}
                 onChange={(e) => {
+                  const inputMonto = parseFloat(e.target.value);
+                  const formattedMonto = inputMonto.toLocaleString('es-ES', {
+                    style: 'currency',
+                    currency: 'EUR' // Cambia 'EUR' por la moneda que desees
+                  });
+
                   if (editedData.id) {
-                    setEditedData({ ...editedData, monto: e.target.value });
+                    setEditedData({ ...editedData, monto: inputMonto });
                   } else {
-                    setNewData({ ...newData, monto: e.target.value });
+                    setNewData({ ...newData, monto: inputMonto });
                   }
                 }}
               />

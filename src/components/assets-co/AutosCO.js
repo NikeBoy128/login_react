@@ -7,7 +7,7 @@ import { PencilSquare, Trash, Clock  } from 'react-bootstrap-icons';
 import DataTable from 'react-data-table-component';
 import { differenceInDays } from 'date-fns';
 
-export default function Autos() {
+export default function AutosCO() {
   const [data, setData] = useState([]);
   const [editedData, setEditedData] = useState({});
   const [newData, setNewData] = useState({});
@@ -31,12 +31,6 @@ export default function Autos() {
       name: 'Acciones',
       cell: (row) => (
         <div>
-          <Button variant="warning" onClick={() => handleModal('edit', row)}>
-            <PencilSquare />
-          </Button>&nbsp;
-          <Button variant="danger" onClick={() => handleDelete(row.id)}>
-            <Trash />
-          </Button>&nbsp;
           <Button variant="info" onClick={() => handleCalculateTime(row.id)}>
           <Clock  />
     </Button>
@@ -238,7 +232,6 @@ export default function Autos() {
                 }}
               />
                 {error && <p>{error}</p>}
-                <Button onClick={() => handleModal('create')}>Crear Auto</Button>
               </div>
             </div>
           </Col>

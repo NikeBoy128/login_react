@@ -105,7 +105,7 @@ export default function Grupos() {
             <Sidebar />
           </Col>
           <Col sm={7}>
-            <div className="dashboard-content">
+          <div className="dashboard-content">
               <div className="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
               <DataTable
                   title="Grupos"
@@ -117,16 +117,16 @@ export default function Grupos() {
                   customStyles={{
                     header: {
                       style: {
-                        backgroundColor: 'black',
-                        color: 'white',
+                        backgroundColor: 'white',
+                        color: 'black',
                         textAlign: 'center',
                       },
                     },
                     rows: {
                       style: {
-                        backgroundColor: '#808080',
-                        marginBottom: '3px',
-                        boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.5)',
+    
+                        marginBottom: '1px',
+                        boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.5)',
                         textAlign: 'center',
                       },
                     },

@@ -5,6 +5,7 @@ import Signup from './components/login/Signup';
 import Signin from './components/login/Signin';
 import Dashboard from './components/assets-admin/Dashboard';
 import Autos from './components/assets-admin/Autos';
+import AutosCO from './components/assets-co/AutosCO';
 import Usuarios from './components/assets-admin/Usuarios';
 import Viajes from './components/assets-admin/Viajes';
 import ViajesCO from './components/assets-co/ViajesCO';
@@ -23,6 +24,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/Autos" element={<PrivateRoute><Autos /></PrivateRoute>}/>
+          <Route path="/AutosCO" element={<PrivateRoute><AutosCO /></PrivateRoute>}/>
           <Route path="/Usuarios" element={<PrivateRoute><Usuarios /></PrivateRoute>}/>
           <Route path="/Viajes" element={<PrivateRoute><Viajes /></PrivateRoute>}/>
           <Route path="/ViajesCO" element={<PrivateRoute><ViajesCO /></PrivateRoute>}/>

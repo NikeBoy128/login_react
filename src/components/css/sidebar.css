@@ -1,0 +1,92 @@
+/* Estilos para la barra lateral horizontal en la parte superior */
+.sidebar.horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 10%; /* Altura de la barra lateral */
+    background: #20690a;
+    z-index: 100;
+    transition: all 0.5s ease;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 99.9%;
+    border-bottom-left-radius: 25px; /* Radio en la esquina inferior izquierda */
+    border-bottom-right-radius: 25px; /* Radio en la esquina inferior derecha */
+    box-shadow: 10px 10px 10px rgb(4, 221, 41); /* Sombra suave para resaltar */
+  }
+  
+  .logo-details {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 20%; /* Ancho del logotipo */
+    padding: 0%;
+    border-right: 1px solid #ccc; /* Línea divisoria a la derecha del logotipo */
+  
+  }
+  
+  .nav-links.horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 50%; /* Ancho del menú de navegación */
+    padding: 0%;  
+  }
+  
+  .nav-links.horizontal a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0% 1%; /* Espaciado entre los enlaces */
+  }
+  
+  .profile-details.horizontal {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 8%; /* Ancho del perfil */
+    padding: 0%;
+    border-left: 1px solid #ccc; /* Línea divisoria a la izquierda del perfil */
+  
+    overflow: hidden; /* Asegura que el borde redondeado no se desborde */
+  }
+  .profile-details.horizontal button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px; /* Ajusta el radio según tu preferencia */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  
+  /* Media query para pantallas más pequeñas */
+  @media (max-width: 768px) {
+    .logo-details,
+    .nav-links.horizontal,
+    .profile-details.horizontal {
+      display: flex;
+      width: 100%; /* Ancho completo para dispositivos móviles */
+      justify-content: center;
+      align-items: center;
+      border: none;
+      padding: 0;
+    }
+  
+    .logo-details {
+      border-right: none; /* Elimina la línea divisoria en dispositivos móviles */
+    }
+  
+    .nav-links.mobile,
+    .profile-details.horizontal {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-left: none; /* Elimina la línea divisoria a la izquierda en dispositivos móviles */
+      border-right: none; /* Elimina la línea divisoria a la derecha en dispositivos móviles */
+      width: 50%; /* Ancho del menú y perfil en dispositivos móviles */
+    }
+  }
+  
