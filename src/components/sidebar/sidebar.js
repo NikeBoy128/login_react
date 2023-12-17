@@ -57,11 +57,13 @@ const Sidebar = () => {
         return 'user';
       case 'Autos':
         return 'car';
-      case 'Gastos', 'GastosCO':
+      case 'AutosCO':
+        return 'car';
+      case 'GastosCO':
         return 'money-bill-wave';
       case 'Gastos':
         return 'money-bill-wave';
-      case 'Viajes', 'ViajesCO':
+      case 'ViajesCO':
         return 'plane';
       case 'Viajes':
         return 'plane';
@@ -73,8 +75,8 @@ const Sidebar = () => {
   };
 
   const roleBasedRoutes = {
-    Admin: ['Usuarios', 'Autos', 'Gastos', 'Viajes', 'Grupos'],
-    Conductor: ['GastosCO', 'ViajesCO'],
+    Admin: ['Usuarios', 'Autos', 'Viajes', 'Gastos', 'Grupos'],
+    Conductor: ['AutosCO', 'ViajesCO', 'GastosCO'],
     Prueba: ['Viajes'],
   };
 
@@ -88,7 +90,7 @@ const Sidebar = () => {
   }, [isExpanded]);
 
   return (
-    
+
     <div style={{ position: 'absolute', height: '99%' }}>
       <CDBSidebar expanded={isExpanded}
         onExpanded={(val) => setIsExpanded(val)}>

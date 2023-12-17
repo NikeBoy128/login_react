@@ -179,7 +179,44 @@ export default function Gastos() {
                   data={filteredItems}
                   pagination
                   subHeader
-                  subHeaderComponent={<SubHeaderComponent />}
+                  customStyles={{
+                    header: {
+                      style: {
+                        backgroundColor: 'white',
+                        color: 'black',
+                        textAlign: 'center',
+                      },
+                    },
+                    rows: {
+                      style: {
+    
+                        marginBottom: '1px',
+                        boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.5)',
+                        textAlign: 'center',
+                      },
+                    },
+                    cells: {
+                      style: {
+                        paddingLeft: '15px',
+                        paddingRight: '0px',
+                      },
+                    },
+                    pagination: {
+                      style: {
+                        backgroundColor: 'white', // Fondo rojo para el paginador
+                      },
+                    },
+                    paginationPerPageOption: {
+                      style: {
+                        color: 'red', // Color del texto de la opción de registros por página
+                      },
+                    },
+                    paginationButton: {
+                      style: {
+                        color: 'red', // Color de los botones de paginación
+                      },
+                    },
+                  }}
                 />
                 {error && <p>{error}</p>}
                 <Button onClick={() => handleModal('create')}>Crear Gasto</Button>

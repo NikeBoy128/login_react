@@ -72,10 +72,49 @@ export default function ViajesCO() {
             <div className="dashboard-content">
               <div className="container mt-4 shadow-lg p-3 mb-5">
                 <DataTable
-                  title="Autos"
+                  title="Viajes"
                   columns={columns}
                   data={data}
                   pagination
+                  subHeader
+                  customStyles={{
+                    header: {
+                      style: {
+                        backgroundColor: 'white',
+                        color: 'black',
+                        textAlign: 'center',
+                      },
+                    },
+                    rows: {
+                      style: {
+    
+                        marginBottom: '1px',
+                        boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.5)',
+                        textAlign: 'center',
+                      },
+                    },
+                    cells: {
+                      style: {
+                        paddingLeft: '15px',
+                        paddingRight: '0px',
+                      },
+                    },
+                    pagination: {
+                      style: {
+                        backgroundColor: 'white', // Fondo rojo para el paginador
+                      },
+                    },
+                    paginationPerPageOption: {
+                      style: {
+                        color: 'red', // Color del texto de la opción de registros por página
+                      },
+                    },
+                    paginationButton: {
+                      style: {
+                        color: 'red', // Color de los botones de paginación
+                      },
+                    },
+                  }}
                 />
                 {error && <p>{error}</p>}
               </div>

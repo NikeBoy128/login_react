@@ -57,7 +57,7 @@ export default function Dashboard() {
                   {error && <Alert variant='danger'>{error}</Alert>}
                   <h3 className='text-center mb-3'>Welcome back: {user ? user.username : 'Loading...'}</h3>
                   <h3 className='text-center mb-3'>Email: {user ? user.email : 'Loading...'}</h3>
-                  <h3 className='text-center mb-3'>Roles: {user ? user.roles : 'Loading...'}</h3>
+                  <h3 className='text-center mb-3'>Rol: {user ? user.roles : 'Loading...'}</h3>
                   <div className='text-center mt-4'>
                   
                   </div>
