@@ -16,7 +16,7 @@ export default function Gastos() {
   const filterTimeout = React.useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [viajes, setViajes] = useState([]);
-const customNoDataComponent = () => <span>No hay registros para mostrar</span>;
+  const customNoDataComponent = () => <span>No hay registros para mostrar</span>;
 
 
   const columns = [
@@ -192,8 +192,8 @@ const customNoDataComponent = () => <span>No hay registros para mostrar</span>;
                   columns={columns}
                   data={filteredItems}
                   pagination
-                  paginationPerPage={3} 
-                  paginationRowsPerPageOptions={[3]} 
+                  paginationPerPage={3}
+                  paginationRowsPerPageOptions={[3]}
                   paginationComponentOptions={{
                     rowsPerPageText: 'Filas por página:',
                     rangeSeparatorText: 'de',
@@ -208,7 +208,7 @@ const customNoDataComponent = () => <span>No hay registros para mostrar</span>;
                     },
                     rows: {
                       style: {
-    
+
                         marginBottom: '1px',
                         boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.5)',
                         textAlign: 'center',
@@ -268,15 +268,13 @@ const customNoDataComponent = () => <span>No hay registros para mostrar</span>;
             <Form.Group controlId="monto">
               <Form.Label>Ingresar Valor</Form.Label>
               <Form.Control
-                textAlign="center"
-                type="money"
-                placeholder="Ingresar valor del gasto"
+                type="text"
                 value={editedData.monto || newData.monto || ''}
                 onChange={(e) => {
                   const inputMonto = parseFloat(e.target.value);
-                  const formattedMonto = inputMonto.toLocaleString('es-ES', {
+                  const formattedMonto = inputMonto.toLocaleString('es-CO', {
                     style: 'currency',
-                    currency: 'EUR' // Cambia 'EUR' por la moneda que desees
+                    currency: 'COP' // Cambia 'COP' por el código de la moneda que desees
                   });
 
                   if (editedData.id) {

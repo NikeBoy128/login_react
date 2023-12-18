@@ -30,7 +30,6 @@ export default function ViajesCO() {
   }, []);
 
   const columns = [
-    { name: 'Id', selector: 'id' },
     { name: 'Conductor', selector: 'conductor' },
     { name: 'Origen', selector: 'origen' },
     { name: 'Destino', selector: 'destino' },
@@ -58,7 +57,21 @@ export default function ViajesCO() {
           <Col sm={9}>
             <div className="dashboard-content">
               <div className="container mt-3 shadow-lg p-3 mb-5">
-                
+                <div style={{ marginBottom: '20px' }}>
+                  <label htmlFor="conductorSelect">Seleccionar Conductor: </label>
+                  <select
+                    id="conductorSelect"
+                    onChange={handleSelectConductor}
+                    value={selectedConductor}
+                  >
+                    <option value="">Todos</option>
+                    {conductores.map((conductor, index) => (
+                      <option key={index} value={conductor}>
+                        {conductor}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <DataTable
                   title="Viajes"
                   columns={columns}
