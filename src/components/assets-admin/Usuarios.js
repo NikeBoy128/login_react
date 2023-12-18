@@ -18,14 +18,15 @@ export default function Usuarios() {
   const [showModal, setShowModal] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [Autos, setAutos] = useState([]);
+  
 
   const columns = [
 
-    { name: 'username', selector: 'username' },
-    { name: 'email', selector: 'email' },
-    { name: 'first_name', selector: 'first_name' },
-    { name: 'last_name', selector: 'last_name' },
-    { name: 'groups', selector: 'groups' },
+    { name: 'Usuario', selector: 'username' },
+    { name: 'Correo Electronico', selector: 'email' },
+    { name: 'Primer Nombre', selector: 'first_name' },
+    { name: 'Primer Apellido', selector: 'last_name' },
+    { name: 'Rol', selector: 'groups' },
     {
       name: 'Acciones',
       cell: (row) => (
@@ -160,8 +161,12 @@ export default function Usuarios() {
                 columns={columns}
                 data={filteredItems}
                 pagination
-                paginationPerPage={7} // Mostrar solo 5 registros por página
-                paginationRowsPerPageOptions={[7]} // Opciones de registros por página solo con 5
+                paginationPerPage={7} 
+                paginationRowsPerPageOptions={[7]} 
+                paginationComponentOptions={{
+                  rowsPerPageText: 'Filas por página:',
+                  rangeSeparatorText: 'de',
+                }}
                 customStyles={{
                   header: {
                     style: {
@@ -213,12 +218,12 @@ export default function Usuarios() {
       </Container>
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{editedData.id ? 'Editar Auto' : 'Crear Nuevo Auto'}</Modal.Title>
+          <Modal.Title>{editedData.id ? 'Editar Usuario' : 'Crear Nuevo Usuario'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="username">
-              <Form.Label>username</Form.Label>
+              <Form.Label>Editar Usuario</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.username || newData.username || ''}
@@ -232,7 +237,7 @@ export default function Usuarios() {
               />
             </Form.Group>
             <Form.Group controlId="email">
-              <Form.Label>email</Form.Label>
+              <Form.Label>Editar Correo Electronico</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.email || newData.email || ''}
@@ -246,7 +251,7 @@ export default function Usuarios() {
               />
             </Form.Group>
             <Form.Group controlId="first_name">
-              <Form.Label>first_name</Form.Label>
+              <Form.Label>Editar Primer Nombre</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.first_name || newData.first_name || ''}
@@ -260,7 +265,7 @@ export default function Usuarios() {
               />
             </Form.Group>
             <Form.Group controlId="last_name">
-              <Form.Label>last_name</Form.Label>
+              <Form.Label>Editar Primer Apellido</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.last_name || newData.last_name || ''}

@@ -16,14 +16,16 @@ export default function Gastos() {
   const filterTimeout = React.useRef(null);
   const [showModal, setShowModal] = useState(false);
   const [viajes, setViajes] = useState([]);
+const customNoDataComponent = () => <span>No hay registros para mostrar</span>;
+
 
   const columns = [
 
-    { name: 'descripcion', selector: 'descripcion' },
-    { name: 'monto', selector: 'monto' },
-    { name: 'viaje', selector: 'viaje' },
+    { name: 'Descripcion', selector: 'descripcion' },
+    { name: 'Valor', selector: 'monto' },
+    { name: 'Viaje', selector: 'viaje' },
     {
-      name: 'Imagenes',
+      name: 'Soporte de Gasto',
       selector: 'imagen',
       cell: (row) => (
         <div>
@@ -190,8 +192,12 @@ export default function Gastos() {
                   columns={columns}
                   data={filteredItems}
                   pagination
-                  paginationPerPage={7} // Mostrar solo 5 registros por página
-                  paginationRowsPerPageOptions={[7]} // Opciones de registros por página solo con 5
+                  paginationPerPage={3} 
+                  paginationRowsPerPageOptions={[3]} 
+                  paginationComponentOptions={{
+                    rowsPerPageText: 'Filas por página:',
+                    rangeSeparatorText: 'de',
+                  }}
                   customStyles={{
                     header: {
                       style: {
@@ -245,9 +251,10 @@ export default function Gastos() {
         <Modal.Body>
           <Form>
             <Form.Group controlId="descripcion">
-              <Form.Label>descripcion</Form.Label>
+              <Form.Label>Descripcion</Form.Label>
               <Form.Control
                 type="text"
+                placeholder="Ingresar descripcion del gasto"
                 value={editedData.descripcion || newData.descripcion || ''}
                 onChange={(e) => {
                   if (editedData.id) {
@@ -259,10 +266,11 @@ export default function Gastos() {
               />
             </Form.Group>
             <Form.Group controlId="monto">
-              <Form.Label>monto</Form.Label>
+              <Form.Label>Ingresar Valor</Form.Label>
               <Form.Control
                 textAlign="center"
                 type="money"
+                placeholder="Ingresar valor del gasto"
                 value={editedData.monto || newData.monto || ''}
                 onChange={(e) => {
                   const inputMonto = parseFloat(e.target.value);
@@ -295,7 +303,7 @@ export default function Gastos() {
                 <option value="">Selecciona un viaje</option>
                 {viajes.map((viaje) => (
                   <option key={viaje.id} value={viaje.id}>
-                    {viaje.origen}
+                    {`${viaje.fecha} - ${viaje.origen} - ${viaje.destino} - ${viaje.conductor} - ${viaje.auto}`}
                   </option>
                 ))}
               </Form.Control>
