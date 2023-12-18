@@ -23,9 +23,9 @@ export default function Usuarios() {
   const columns = [
 
     { name: 'Usuario', selector: 'username' },
-    { name: 'Correo Electronico', selector: 'email' },
-    { name: 'Primer Nombre', selector: 'first_name' },
-    { name: 'Primer Apellido', selector: 'last_name' },
+    { name: 'Correo electronico', selector: 'email' },
+    { name: 'Primer nombre', selector: 'first_name' },
+    { name: 'Primer apellido', selector: 'last_name' },
     { name: 'Rol', selector: 'groups' },
     {
       name: 'Acciones',
@@ -237,7 +237,7 @@ export default function Usuarios() {
               />
             </Form.Group>
             <Form.Group controlId="email">
-              <Form.Label>Editar Correo Electronico</Form.Label>
+              <Form.Label>Editar correo electronico</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.email || newData.email || ''}

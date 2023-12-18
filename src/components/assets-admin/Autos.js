@@ -23,7 +23,7 @@ export default function Autos() {
   const columns = [
 
     { name: 'Marca', selector: 'marca' },
-    { name: 'Capasidad de Pasajeros', selector: 'cantidad_pasajeros' },
+    { name: 'Capacidad de pasajeros', selector: 'cantidad_pasajeros' },
     { name: 'Placa', selector: 'placa' },
     { name: 'VENC-Soat', selector: 'soat' },
     { name: 'VENC-Tecno', selector: 'tecnomecanica' },

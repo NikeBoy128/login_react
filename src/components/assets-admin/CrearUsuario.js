@@ -94,7 +94,7 @@ export default function CrearUsuario() {
                   <Form.Label>Correro Electronico</Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Ingresar Correo Electronico"
+                    placeholder="Ingresar Correo electronico"
                     name="email"
                     value={userData.email}
                     onChange={handleChange}

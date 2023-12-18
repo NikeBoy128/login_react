@@ -25,7 +25,7 @@ const customNoDataComponent = () => <span>No hay registros para mostrar</span>;
     { name: 'Valor', selector: 'monto' },
     { name: 'Viaje', selector: 'viaje' },
     {
-      name: 'Soporte de Gasto',
+      name: 'Soporte de gasto',
       selector: 'imagen',
       cell: (row) => (
         <div>

@@ -24,10 +24,10 @@ export default function Viajes() {
     { name: 'Conductor', selector: 'conductor', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Conductor'
     { name: 'Origen', selector: 'origen', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Origen'
     { name: 'Destino', selector: 'destino', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Destino'
-    { name: 'Fecha de Salida', selector: 'fecha', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Fecha'
+    { name: 'Fecha de salida', selector: 'fecha', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Fecha'
     { name: 'Hora', selector: 'hora', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Hora'
     { name: 'Auto', selector: 'auto', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Auto'
-    { name: 'Gastos Totales', selector: 'total', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Gastos Totales'
+    { name: 'Gastos totales', selector: 'total', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Gastos Totales'
     {
       name: 'Acciones',
       cell: (row) => (
@@ -296,7 +296,7 @@ export default function Viajes() {
               />
             </Form.Group>
             <Form.Group controlId="fecha">
-              <Form.Label>Fecha de Salida</Form.Label>
+              <Form.Label>Fecha de salida</Form.Label>
               <Form.Control
                 type="date"
                 value={editedData.fecha || newData.fecha || ''}
