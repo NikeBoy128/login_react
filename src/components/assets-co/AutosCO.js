@@ -157,23 +157,6 @@ export default function AutosCO() {
     setShowModal(false);
   };
 
-  const handleSave = async () => {
-    try {
-      if (editedData.id) {
-        await axios.put(`https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/${editedData.id}`, editedData);
-        const updatedData = data.map((item) => (item.id === editedData.id ? editedData : item));
-        setData(updatedData);
-        setFilteredItems(updatedData);
-      } else {
-        const response = await axios.post('https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/', newData);
-        setData([...data, response.data]);
-        setFilteredItems([...filteredItems, response.data]);
-      }
-      handleModalClose();
-    } catch (err) {
-      setError('Failed to save item');
-    }
-  };
 
   return (
     <div style={{ height: '100vh' }}>
@@ -184,14 +167,18 @@ export default function AutosCO() {
           </Col>
           <Col sm={9}>
             <div className="dashboard-content">
-              <div className="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
+              <div className="container mt-3 shadow-lg p-3 mb-5 bg-body rounded">
               <DataTable
                 title="Autos"
                 columns={columns}
                 data={filteredItems}
                 pagination
-                paginationPerPage={5} // Mostrar solo 5 registros por página
-                paginationRowsPerPageOptions={[5]} // Opciones de registros por página solo con 5
+                paginationPerPage={3} 
+                paginationRowsPerPageOptions={[3]} 
+                paginationComponentOptions={{
+                  rowsPerPageText: 'Filas por página:',
+                  rangeSeparatorText: 'de',
+                }}
                 customStyles={{
                   header: {
                     style: {
@@ -237,106 +224,6 @@ export default function AutosCO() {
           </Col>
         </Row>
       </Container>
-      <Modal show={showModal} onHide={handleModalClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{editedData.id ? 'Editar Auto' : 'Crear Nuevo Auto'}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="marca">
-              <Form.Label>Marca</Form.Label>
-              <Form.Control
-                type="text"
-                value={editedData.marca || newData.marca || ''}
-                onChange={(e) => {
-                  if (editedData.id) {
-                    setEditedData({ ...editedData, marca: e.target.value });
-                  } else {
-                    setNewData({ ...newData, marca: e.target.value });
-                  }
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="cantidad_pasajeros">
-              <Form.Label>Cantidad Pasajeros</Form.Label>
-              <Form.Control
-                type="text"
-                value={editedData.cantidad_pasajeros || newData.cantidad_pasajeros || ''}
-                onChange={(e) => {
-                  if (editedData.id) {
-                    setEditedData({ ...editedData, cantidad_pasajeros: e.target.value });
-                  } else {
-                    setNewData({ ...newData, cantidad_pasajeros: e.target.value });
-                  }
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="placa">
-              <Form.Label>Placa</Form.Label>
-              <Form.Control
-                type="text"
-                value={editedData.placa || newData.placa || ''}
-                onChange={(e) => {
-                  if (editedData.id) {
-                    setEditedData({ ...editedData, placa: e.target.value });
-                  } else {
-                    setNewData({ ...newData, placa: e.target.value });
-                  }
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="soat">
-              <Form.Label>Venc-Soat</Form.Label>
-              <Form.Control
-                type="date"
-                value={editedData.soat || newData.soat || ''}
-                onChange={(e) => {
-                  if (editedData.id) {
-                    setEditedData({ ...editedData, soat: e.target.value });
-                  } else {
-                    setNewData({ ...newData, soat: e.target.value });
-                  }
-                }}
-              />
-            </Form.Group>
-            <Form.Group controlId="tecnomecanica">
-              <Form.Label>Venc-Tecnomecatica</Form.Label>
-              <Form.Control
-                type="date"
-                value={editedData.tecnomecanica || newData.tecnomecanica || ''}
-                onChange={(e) => {
-                  if (editedData.id) {
-                    setEditedData({ ...editedData, tecnomecanica: e.target.value });
-                  } else {
-                    setNewData({ ...newData, tecnomecanica: e.target.value });
-                  }
-                }}
-              />
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="primary" onClick={handleSave}>
-            {editedData.id ? 'Guardar' : 'Crear'}
-          </Button>
-          <Button variant="secondary" onClick={handleModalClose}>
-            Cancelar
-          </Button>
-        </Modal.Footer>
-      </Modal>
-      <Modal show={showDifferenceModal} onHide={handleCloseDifferenceModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Renovación</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>{differenceMessage}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseDifferenceModal}>
-            Cerrar
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </div>
   );
 }

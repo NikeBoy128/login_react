@@ -20,11 +20,11 @@ export default function Viajes() {
   const [autos, setAutos] = useState([]);
 
   const columns = [
-
+    { name: 'Id', selector: 'id'}, 
     { name: 'Conductor', selector: 'conductor', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Conductor'
     { name: 'Origen', selector: 'origen', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Origen'
     { name: 'Destino', selector: 'destino', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Destino'
-    { name: 'Fecha', selector: 'fecha', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Fecha'
+    { name: 'Fecha de Salida', selector: 'fecha', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Fecha'
     { name: 'Hora', selector: 'hora', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Hora'
     { name: 'Auto', selector: 'auto', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Auto'
     { name: 'Gastos Totales', selector: 'total', minWidth: '20px' }, // Establece un ancho mínimo para la columna 'Gastos Totales'
@@ -181,54 +181,58 @@ export default function Viajes() {
             <Sidebar />
           </Col>
           <Col sm={9}>
-          <div className="dashboard-content">
+            <div className="dashboard-content">
               <div className="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
-              <DataTable
-                title="Viajes"
-                columns={columns}
-                data={filteredItems}
-                pagination
-                paginationPerPage={7} // Mostrar solo 5 registros por página
-                paginationRowsPerPageOptions={[7]} // Opciones de registros por página solo con 5
-                customStyles={{
-                  header: {
-                    style: {
-                      backgroundColor: 'white',
-                      color: 'black',
-                      textAlign: 'center',
+                <DataTable
+                  title="Viajes"
+                  columns={columns}
+                  data={filteredItems}
+                  pagination
+                  paginationPerPage={7} 
+                  paginationRowsPerPageOptions={[7]} 
+                  paginationComponentOptions={{
+                    rowsPerPageText: 'Filas por página:',
+                    rangeSeparatorText: 'de',
+                  }}
+                  customStyles={{
+                    header: {
+                      style: {
+                        backgroundColor: 'white',
+                        color: 'black',
+                        textAlign: 'center',
+                      },
                     },
-                  },
-                  rows: {
-                    style: {
-  
-                      marginBottom: '1px',
-                      boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.5)',
-                      textAlign: 'center',
+                    rows: {
+                      style: {
+
+                        marginBottom: '1px',
+                        boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.5)',
+                        textAlign: 'center',
+                      },
                     },
-                  },
-                  cells: {
-                    style: {
-                      paddingLeft: '15px',
-                      paddingRight: '0px',
+                    cells: {
+                      style: {
+                        paddingLeft: '15px',
+                        paddingRight: '0px',
+                      },
                     },
-                  },
-                  pagination: {
-                    style: {
-                      backgroundColor: 'white', // Fondo rojo para el paginador
+                    pagination: {
+                      style: {
+                        backgroundColor: 'white', // Fondo rojo para el paginador
+                      },
                     },
-                  },
-                  paginationPerPageOption: {
-                    style: {
-                      color: 'red', // Color del texto de la opción de registros por página
+                    paginationPerPageOption: {
+                      style: {
+                        color: 'red', // Color del texto de la opción de registros por página
+                      },
                     },
-                  },
-                  paginationButton: {
-                    style: {
-                      color: 'red', // Color de los botones de paginación
+                    paginationButton: {
+                      style: {
+                        color: 'red', // Color de los botones de paginación
+                      },
                     },
-                  },
-                }}
-              />
+                  }}
+                />
                 {error && <p>{error}</p>}
                 <Button onClick={() => handleModal('create')}>Crear Viaje</Button>
               </div>
@@ -238,12 +242,12 @@ export default function Viajes() {
       </Container>
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{editedData.id ? 'Editar Auto' : 'Crear Nuevo Auto'}</Modal.Title>
+          <Modal.Title>{editedData.id ? 'Editar Viaje' : 'Crear Nuevo Viaje'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
-          <Form.Group controlId="Conductor">
-              <Form.Label>conductor</Form.Label>
+            <Form.Group controlId="Conductor">
+              <Form.Label>Conductor</Form.Label>
               <Form.Control
                 as="select"
                 value={editedData.conductor || newData.conductor || ''}
@@ -255,8 +259,8 @@ export default function Viajes() {
                   }
                 }}
               >
-                <option value="">Selecciona un viaje</option>
-                {Usuarios.map((viaje) => (
+                <option value="">Seleccionar un Conductor</option>
+                {Usuarios.filter((usuario) => usuario.groups.includes('Conductor')).map((viaje) => (
                   <option key={viaje.id} value={viaje.id}>
                     {viaje.username}
                   </option>
@@ -264,7 +268,7 @@ export default function Viajes() {
               </Form.Control>
             </Form.Group>
             <Form.Group controlId="origen">
-              <Form.Label>origen</Form.Label>
+              <Form.Label>Origen</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.origen || newData.origen || ''}
@@ -278,7 +282,7 @@ export default function Viajes() {
               />
             </Form.Group>
             <Form.Group controlId="destino">
-              <Form.Label>destino</Form.Label>
+              <Form.Label>Destino</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.destino || newData.destino || ''}
@@ -292,7 +296,7 @@ export default function Viajes() {
               />
             </Form.Group>
             <Form.Group controlId="fecha">
-              <Form.Label>fecha</Form.Label>
+              <Form.Label>Fecha de Salida</Form.Label>
               <Form.Control
                 type="date"
                 value={editedData.fecha || newData.fecha || ''}
@@ -332,7 +336,7 @@ export default function Viajes() {
                   }
                 }}
               >
-                <option value="">Selecciona un viaje</option>
+                <option value="">Selecciona un Auto</option>
                 {autos.map((auto) => (
                   <option key={auto.id} value={auto.id}>
                     {auto.placa}

@@ -104,7 +104,7 @@ export default function Grupos() {
           <Col sm={4}>
             <Sidebar />
           </Col>
-          <Col sm={7}>
+          <Col sm={5}>
           <div className="dashboard-content">
               <div className="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
               <DataTable
@@ -112,8 +112,12 @@ export default function Grupos() {
                   columns={columns}
                   data={filteredItems}
                   pagination
-                  paginationPerPage={7} // Mostrar solo 5 registros por página
-                  paginationRowsPerPageOptions={[7]} // Opciones de registros por página solo con 5
+                  paginationPerPage={7} 
+                  paginationRowsPerPageOptions={[7]} 
+                  paginationComponentOptions={{
+                    rowsPerPageText: 'Filas por página:',
+                    rangeSeparatorText: 'de',
+                  }}
                   customStyles={{
                     header: {
                       style: {

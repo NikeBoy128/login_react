@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Card, Container, Row, Col, Button, Form, Modal } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Sidebar from '../sidebar/sidebar';
 import 'bootstrap/dist/css/bootstrap.css';
 import DataTable from 'react-data-table-component';
@@ -8,11 +8,29 @@ import DataTable from 'react-data-table-component';
 export default function ViajesCO() {
   const [data, setData] = useState([]);
   const [error, setError] = useState('');
-  const [Usuarios, setUsuarios] = useState([]);
-  const [autos, setAutos] = useState([]);
+  const [selectedConductor, setSelectedConductor] = useState('');
+  const [conductores, setConductores] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/viajes/');
+        setData(response.data);
+        // Obtenemos todos los conductores
+        const allConductores = response.data.map((viaje) => viaje.conductor);
+        // Eliminamos los duplicados y ordenamos alfabéticamente
+        const uniqueConductores = Array.from(new Set(allConductores)).sort();
+        setConductores(uniqueConductores);
+      } catch (err) {
+        setError('Failed to fetch data');
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const columns = [
-
+    { name: 'Id', selector: 'id' },
     { name: 'Conductor', selector: 'conductor' },
     { name: 'Origen', selector: 'origen' },
     { name: 'Destino', selector: 'destino' },
@@ -22,44 +40,13 @@ export default function ViajesCO() {
     { name: 'Total', selector: 'total' },
   ];
 
-  useEffect(() => {
-    const fetchUsuarios = async () => {
-      try {
-        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/usuarios/');
-        setUsuarios(response.data);
-      } catch (err) {
-        setError('Failed to fetch Usuarios');
-      }
-    };
+  const filteredItems = selectedConductor
+    ? data.filter((item) => item.conductor === selectedConductor)
+    : data;
 
-    fetchUsuarios();
-  }, []);
-
-  useEffect(() => {
-    const fetchAutos = async () => {
-      try {
-        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/autos/');
-        setAutos(response.data);
-      } catch (err) {
-        setError('Failed to fetch Usuarios');
-      }
-    };
-
-    fetchAutos();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('https://backen-diplomado-51d51f42ca0d.herokuapp.com/viajes/');
-        setData(response.data);
-      } catch (err) {
-        setError('Failed to fetch data');
-      }
-    };
-
-    fetchData();
-  }, []);
+  const handleSelectConductor = (e) => {
+    setSelectedConductor(e.target.value);
+  };
 
   return (
     <div style={{ height: '100vh' }}>
@@ -70,13 +57,19 @@ export default function ViajesCO() {
           </Col>
           <Col sm={9}>
             <div className="dashboard-content">
-              <div className="container mt-4 shadow-lg p-3 mb-5">
+              <div className="container mt-3 shadow-lg p-3 mb-5">
+                
                 <DataTable
                   title="Viajes"
                   columns={columns}
-                  data={data}
+                  data={filteredItems}
                   pagination
-                  subHeader
+                  paginationPerPage={3}
+                  paginationRowsPerPageOptions={[3]}
+                  paginationComponentOptions={{
+                    rowsPerPageText: 'Filas por página:',
+                    rangeSeparatorText: 'de',
+                  }}
                   customStyles={{
                     header: {
                       style: {
@@ -87,7 +80,6 @@ export default function ViajesCO() {
                     },
                     rows: {
                       style: {
-    
                         marginBottom: '1px',
                         boxShadow: '0px 0px 1px rgba(0, 0, 0, 0.5)',
                         textAlign: 'center',
@@ -101,17 +93,17 @@ export default function ViajesCO() {
                     },
                     pagination: {
                       style: {
-                        backgroundColor: 'white', // Fondo rojo para el paginador
+                        backgroundColor: 'white',
                       },
                     },
                     paginationPerPageOption: {
                       style: {
-                        color: 'red', // Color del texto de la opción de registros por página
+                        color: 'red',
                       },
                     },
                     paginationButton: {
                       style: {
-                        color: 'red', // Color de los botones de paginación
+                        color: 'red',
                       },
                     },
                   }}

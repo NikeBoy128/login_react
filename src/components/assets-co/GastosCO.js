@@ -171,14 +171,19 @@ export default function Gastos() {
           </Col>
           <Col sm={9}>
             <div className="dashboard-content">
-              <div className="container mt-4 shadow-lg p-3 mb-5 bg-body rounded">
+              <div className="container mt-3 shadow-lg p-3 mb-5 bg-body rounded">
 
                 <DataTable
                   title="Gastos"
                   columns={columns}
                   data={filteredItems}
                   pagination
-                  subHeader
+                  paginationPerPage={3} 
+                  paginationRowsPerPageOptions={[3]} 
+                  paginationComponentOptions={{
+                    rowsPerPageText: 'Filas por página:',
+                    rangeSeparatorText: 'de',
+                  }}
                   customStyles={{
                     header: {
                       style: {
