@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { Newspaper, PencilSquare, Trash } from 'react-bootstrap-icons';
 import DataTable from 'react-data-table-component';
 
-export default function Gastos() {
+export default function GastosCO() {
   const [data, setData] = useState([]);
   const [editedData, setEditedData] = useState({});
   const [newData, setNewData] = useState({});
@@ -251,15 +251,21 @@ export default function Gastos() {
               />
             </Form.Group>
             <Form.Group controlId="monto">
-              <Form.Label>monto</Form.Label>
+              <Form.Label>Ingresar Valor</Form.Label>
               <Form.Control
                 type="text"
                 value={editedData.monto || newData.monto || ''}
                 onChange={(e) => {
+                  const inputMonto = parseFloat(e.target.value);
+                  const formattedMonto = inputMonto.toLocaleString('es-CO', {
+                    style: 'currency',
+                    currency: 'COP'
+                  });
+
                   if (editedData.id) {
-                    setEditedData({ ...editedData, monto: e.target.value });
+                    setEditedData({ ...editedData, monto: inputMonto });
                   } else {
-                    setNewData({ ...newData, monto: e.target.value });
+                    setNewData({ ...newData, monto: inputMonto });
                   }
                 }}
               />
@@ -280,7 +286,7 @@ export default function Gastos() {
                 <option value="">Selecciona un viaje</option>
                 {viajes.map((viaje) => (
                   <option key={viaje.id} value={viaje.id}>
-                    {viaje.origen}
+                    {`${viaje.fecha} - ${viaje.origen} - ${viaje.destino} - ${viaje.conductor} - ${viaje.auto}`}
                   </option>
                 ))}
               </Form.Control>

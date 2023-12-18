@@ -54,38 +54,61 @@ export default function Autos() {
       handleFilter();
     }
   };
-
   const handleCalculateTime = async (id) => {
     try {
       const autoData = data.find((auto) => auto.id === id);
   
-      if (autoData) {
-        const currentDate = new Date();
-        const soatDate = new Date(autoData.soat);
-        const tecnomecanicaDate = new Date(autoData.tecnomecanica);
-  
-        const daysDifferenceSOAT = differenceInDays(soatDate, currentDate);
-        const daysDifferenceTecnomecanica = differenceInDays(tecnomecanicaDate, currentDate);
-  
-        const soatMessage = `Faltan ${daysDifferenceSOAT} días para la renovación del SOAT para el Auto con la Placa ${autoData.placa}.`;
-        setDifferenceMessage(`${soatMessage}\n\n${tecnomecanicaMessage}`);
-        const tecnomecanicaMessage = `Faltan ${daysDifferenceTecnomecanica} días para la renovación de la Tecnomecánica para la placa ${autoData.placa}.`;
-
-        setDifferenceMessage(`${soatMessage}\n${tecnomecanicaMessage}`);
-        setShowDifferenceModal(true);
-      } else {
-        alert(`No se encontraron datos para el Auto ID  ${autoData.placa}.`);
+      if (!autoData) {
+        throw new Error(`No se encontraron datos para el Auto ID ${id}.`);
       }
+  
+      const currentDate = new Date();
+      const soatDate = new Date(autoData.soat);
+      const tecnomecanicaDate = new Date(autoData.tecnomecanica);
+  
+      if (isNaN(soatDate.getTime()) || isNaN(tecnomecanicaDate.getTime())) {
+        throw new Error('Las fechas son inválidas.');
+      }
+  
+      const diffSOAT = differenceInDays(soatDate, currentDate);
+      const diffTecnomecanica = differenceInDays(tecnomecanicaDate, currentDate);
+  
+      const monthsSOAT = Math.floor(diffSOAT / 30);
+      const daysSOAT = diffSOAT % 30;
+      const minutesSOAT = Math.floor((diffSOAT % 1) * 24 * 60);
+  
+      const monthsTecnomecanica = Math.floor(diffTecnomecanica / 30);
+      const daysTecnomecanica = diffTecnomecanica % 30;
+      const minutesTecnomecanica = Math.floor((diffTecnomecanica % 1) * 24 * 60);
+  
+      let soatMessage = '';
+      let tecnomecanicaMessage = '';
+  
+      if (diffSOAT < 0) {
+        soatMessage = `El SOAT del Auto con Placa ${autoData.placa} ha caducado. Debe renovarlo de inmediato.`;
+      } else {
+        soatMessage = `Faltan ${monthsSOAT} meses, ${daysSOAT} días y ${minutesSOAT} minutos para la renovación del SOAT para el Auto con la Placa ${autoData.placa}.`;
+      }
+  
+      if (diffTecnomecanica < 0) {
+        tecnomecanicaMessage = `La Tecnomecánica para la placa ${autoData.placa} ha caducado. Debe renovarla de inmediato.`;
+      } else {
+        tecnomecanicaMessage = `Faltan ${monthsTecnomecanica} meses, ${daysTecnomecanica} días y ${minutesTecnomecanica} minutos para la renovación de la Tecnomecánica para la placa ${autoData.placa}.`;
+      }
+  
+      setDifferenceMessage(soatMessage + '\n\n' + tecnomecanicaMessage);
+      setShowDifferenceModal(true);
     } catch (error) {
-      console.error('Error al calcular la diferencia de tiempo:', error);
+      console.error('Error al calcular la diferencia de tiempo:', error.message);
       alert('Ocurrió un error al calcular la diferencia de tiempo.');
     }
   };
-
+  
   const handleCloseDifferenceModal = () => {
     setShowDifferenceModal(false);
     setDifferenceMessage('');
   };
+  
 
   const handleFilter = () => {
     const searchText = searchInput.toLowerCase();
