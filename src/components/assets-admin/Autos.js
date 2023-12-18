@@ -75,11 +75,17 @@ export default function Autos() {
   
       const monthsSOAT = Math.floor(diffSOAT / 30);
       const daysSOAT = diffSOAT % 30;
-      const minutesSOAT = Math.floor((diffSOAT % 1) * 24 * 60);
+      
+      // Cálculo de minutos para SOAT
+      const diffMinutesSOAT = Math.floor((soatDate.getTime() - currentDate.getTime()) / (1000 * 60));
+      const minutesSOAT = diffMinutesSOAT % 60;
   
       const monthsTecnomecanica = Math.floor(diffTecnomecanica / 30);
       const daysTecnomecanica = diffTecnomecanica % 30;
-      const minutesTecnomecanica = Math.floor((diffTecnomecanica % 1) * 24 * 60);
+  
+      // Cálculo de minutos para Tecnomecánica
+      const diffMinutesTecnomecanica = Math.floor((tecnomecanicaDate.getTime() - currentDate.getTime()) / (1000 * 60));
+      const minutesTecnomecanica = diffMinutesTecnomecanica % 60;
   
       let soatMessage = '';
       let tecnomecanicaMessage = '';
